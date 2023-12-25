@@ -1,31 +1,81 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
+app.use(express.json());
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
     // res.send('<p>Hello World</p>')
 
     res.format({
-        json: function () {
+        json: () => {
           res.json({ message: 'Hello World JSON' })
         }
       })
   })
   
-app.get('/contact', function (req, res) {
-    res.send('<p>Hello Contact</p>')
+app.get('/contact', (req, res) => {
+    // res.send('<p>Hello Contact</p>')
+    res.status(200).format({
+      json: () => {
+        res.send({
+          ip: req.ip,
+          query: req.query,
+          body: req.body,
+          path: req.path,
+          params: req.params
+          
+        })
+      },
+    })
+
+
   })
 
-app.get('/about', function (req, res) {
-    res.send('<p>Hello About</p>')
+  app.post('/contact', (req, res) => {
+    res.send('<p>Hello Contact (post)</p>')
   })
 
-app.get('/project', function (req, res) {
-    res.send('<p>Hello Project</p>')
+  app.put('/contact/:category', (req, res) => {
+    // res.send('<p>Hello Contact (post)</p>')
+
+    res.status(200).format({
+      json: () => {
+        res.send({
+          ip: req.ip,
+          query: req.query,
+          body: req.body,
+          path: req.path,
+          params: req.params
+          
+        })
+      },
+    })
+  })
+  
+  app.patch('/contact', (req, res) => {
+    res.send('<p>Hello Contact (post)</p>')
   })
 
-app.get('/blog', function (req, res) {
+  app.delete('/contact', (req, res) => {
+    res.send('<p>Hello Contact (post)</p>')
+  })
+
+
+app.get('/about', (req, res) => {
+    // res.send('<p>Hello About</p>')
+
+    res.cookie('token', '12345').send('<p>Hello About</p>')
+
+  })
+
+app.get('/project', (req, res) => {
+    // res.send('<p>Hello Project</p>')
+  
+  })
+
+app.get('/blog', (req, res) => {
     res.send('<p>Hello Blog</p>')
   })
 
