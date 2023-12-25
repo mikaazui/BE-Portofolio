@@ -8,7 +8,7 @@ app.get('/', function (req, res) {
 
     res.format({
         json: function () {
-          res.json({ message: 'Hello World' })
+          res.json({ message: 'Hello World JSON' })
         }
       })
   })
