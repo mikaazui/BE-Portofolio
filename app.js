@@ -4,9 +4,30 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
+
+app.use((req, res, next) => {
+  let time = new Date()
+  time = time.toLocaleDateString()
+  const log = {
+    time: time,                                                                                                           
+    path: req.path,
+    method: req.method,
+    ip: req.ip,
+    query: req.query,
+    body: req.body,
+    params: req.params,
+    cookies: req.cookies,
+    protocol: req.protocol,
+
+  }
+  console.info(log)
+  
+  next()
+})
 
 app.get('/', (req, res) => {
-    // res.send('<p>Hello World</p>')
+    res.send('<p>Hello World</p>')
 
     res.format({
         json: () => {
@@ -64,11 +85,14 @@ app.get('/contact', (req, res) => {
 
 
 app.get('/about', (req, res) => {
-    // res.send('<p>Hello About</p>')
-  })
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman about',
+  })})
 
 app.get('/project', (req, res) => {
-    // res.send('<p>Hello Project</p>')
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman project',
+  })
   
   })
 
@@ -93,6 +117,12 @@ app.delete('/logout', (req, res) => {
 
   res.status(200).json({
     message: 'logout success'
+  })
+})
+//middleware for unknown path
+app.use((req, res) => {
+  res.status(404).json({
+    message: 'page not found'
   })
 })
 
