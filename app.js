@@ -65,9 +65,6 @@ app.get('/contact', (req, res) => {
 
 app.get('/about', (req, res) => {
     // res.send('<p>Hello About</p>')
-
-    res.cookie('token', '12345').send('<p>Hello About</p>')
-
   })
 
 app.get('/project', (req, res) => {
@@ -79,8 +76,25 @@ app.get('/blog', (req, res) => {
     res.send('<p>Hello Blog</p>')
   })
 
+  app.post('/login', (req, res) => {
+    
+    res.cookie('token', '12345')
+    res.cookie('name', 'valent')
 
+    res.status(200).json({
+      message: 'login success',
+    })
 
+  } )
+
+app.delete('/logout', (req, res) => {
+  res.clearCookie('token')
+  res.clearCookie('name')
+
+  res.status(200).json({
+    message: 'logout success'
+  })
+})
 
 
 app.listen(5000, () => {
