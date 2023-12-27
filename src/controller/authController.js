@@ -1,4 +1,4 @@
-const post = (req, res) => {
+const login = (req, res) => {
 
     res.cookie('token', '12345')
     res.cookie('name', 'valent')
@@ -9,7 +9,7 @@ const post = (req, res) => {
 
 }
 
-const remove = (req, res) => {
+const logout = (req, res) => {
     res.clearCookie('token')
     res.clearCookie('name')
 
@@ -19,6 +19,6 @@ const remove = (req, res) => {
 }
 
 export default {
-    post,
-    remove
+    login,
+    logout
 }
