@@ -1,5 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import {routeProfile}  from "./src/router/profile.js";
 
 const app = express();
 
@@ -37,82 +38,7 @@ app.get('/', (req, res) => {
 
 //separator
 
-//start profile
-
-//membaca data (contact)
-app.get('/profile/:id', (req, res) => {
-  // res.send('<p>Hello Contact</p>')
-  res.status(200).format({
-    json: () => {
-      res.send({
-        id: req.params.id,
-        ip: req.ip,
-        query: req.query,
-        body: req.body,
-        path: req.path,
-        params: req.params,
-        cookies: req.cookies,
-        protocol: req.protocol,
-
-      })
-    },
-  })
-
-
-})
-//membuat data (profile)
-app.post('/profile', (req, res) => {
-  res.status(200).json({
-    id: req.params.id,
-    ip: req.ip,
-    query: req.query,
-    body: req.body,
-    path: req.path,
-    params: req.params
-  })
-})
-//ubah data keseluruhan (profile)
-app.put('/profile/:id', (req, res) => {
-  res.status(200).json({
-    id: req.params.id,
-    ip: req.ip,
-    query: req.query,
-    body: req.body,
-    path: req.path,
-    params: req.params
-  })
-
-  res.status(200).json({
-    id: req.params.id,
-    ip: req.ip,
-    query: req.query,
-    body: req.body,
-    path: req.path,
-    params: req.params
-  })
-})
-//untuk mengubah sebagian data (profile)
-app.patch('/profile/:id', (req, res) => {
-  res.status(200).json({
-    id: req.params.id,
-    ip: req.ip,
-    query: req.query,
-    body: req.body,
-    path: req.path,
-    params: req.params
-  })
-})
-//menghapus data (profile)
-app.delete('/profile/:id', (req, res) => {
-  res.status(200).json({
-    id: req.params.id,
-    ip: req.ip,
-    body: req.body,
-    query: req.query,
-    path: req.path,
-    params: req.params
-  })
-})
+app.use(routeProfile);
 
 
 //separator start project
@@ -187,20 +113,71 @@ app.delete('/education/:id', (req, res) => {
 
 // separator start blog
 
+
 app.get('/blog/:id', (req, res) => {
-  res.send('<p>Hello Blog</p>')
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman blog',
+  })
+
 })
 app.post('/blog', (req, res) => {
-  res.send('<p>Hello Blog</p>')
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman blog',
+  })
+
 })
 app.put('/blog/:id', (req, res) => {
-  res.send('<p>Hello Blog</p>')
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman blog',
+  })
+
 })
 app.patch('/blog/:id', (req, res) => {
-  res.send('<p>Hello Blog</p>')
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman blog',
+  })
+
 })
 app.delete('/blog/:id', (req, res) => {
-  res.send('<p>Hello Blog</p>')
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman blog',
+  })
+
+})
+
+
+//separator start skills
+
+
+app.get('/skills/:id', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman skills',
+  })
+
+})
+app.post('/skills', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman skills',
+  })
+
+})
+app.put('/skills/:id', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman skills',
+  })
+
+})
+app.patch('/skills/:id', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman skills',
+  })
+
+})
+app.delete('/skills/:id', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman skills',
+  })
+
 })
 
 
