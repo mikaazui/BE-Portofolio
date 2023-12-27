@@ -37,9 +37,10 @@ app.get('/', (req, res) => {
 
 //separator
 
+//start profile
 
 //membaca data (contact)
-app.get('/contact/:id', (req, res) => {
+app.get('/profile/:id', (req, res) => {
   // res.send('<p>Hello Contact</p>')
   res.status(200).format({
     json: () => {
@@ -59,8 +60,8 @@ app.get('/contact/:id', (req, res) => {
 
 
 })
-//membuat data contact (contact)
-app.post('/contact', (req, res) => {
+//membuat data (profile)
+app.post('/profile', (req, res) => {
   res.status(200).json({
     id: req.params.id,
     ip: req.ip,
@@ -70,8 +71,8 @@ app.post('/contact', (req, res) => {
     params: req.params
   })
 })
-//ubah data keseluruhan (contact)
-app.put('/contact/:id', (req, res) => {
+//ubah data keseluruhan (profile)
+app.put('/profile/:id', (req, res) => {
   res.status(200).json({
     id: req.params.id,
     ip: req.ip,
@@ -90,8 +91,8 @@ app.put('/contact/:id', (req, res) => {
     params: req.params
   })
 })
-//untuk mengubah sebagian data (contact)
-app.patch('/contact:id', (req, res) => {
+//untuk mengubah sebagian data (profile)
+app.patch('/profile/:id', (req, res) => {
   res.status(200).json({
     id: req.params.id,
     ip: req.ip,
@@ -101,20 +102,20 @@ app.patch('/contact:id', (req, res) => {
     params: req.params
   })
 })
-//menghapus data (contact)
-app.delete('/contact/:id', (req, res) => {
+//menghapus data (profile)
+app.delete('/profile/:id', (req, res) => {
   res.status(200).json({
     id: req.params.id,
     ip: req.ip,
-    query: req.query,
     body: req.body,
+    query: req.query,
     path: req.path,
     params: req.params
   })
 })
 
 
-//separator
+//separator start project
 
 
 app.get('/project', (req, res) => {
@@ -123,14 +124,88 @@ app.get('/project', (req, res) => {
   })
 
 })
+app.post('/project', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman project',
+  })
+
+})
+app.put('/project', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman project',
+  })
+
+})
+app.patch('/project', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman project',
+  })
+
+})
+app.delete('/project', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman project',
+  })
+
+})
 
 
-// separator
+//separator start education
 
-app.get('/blog', (req, res) => {
+
+app.get('/education/:id', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman education',
+  })
+
+})
+app.post('/education', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman education',
+  })
+
+})
+app.put('/education/:id', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman education',
+  })
+
+})
+app.patch('/education/:id', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman education',
+  })
+
+})
+app.delete('/education/:id', (req, res) => {
+  res.status(200).json({
+    message: 'berhasil masuk ke halaman education',
+  })
+
+})
+
+
+// separator start blog
+
+app.get('/blog/:id', (req, res) => {
   res.send('<p>Hello Blog</p>')
 })
-//separator
+app.post('/blog', (req, res) => {
+  res.send('<p>Hello Blog</p>')
+})
+app.put('/blog/:id', (req, res) => {
+  res.send('<p>Hello Blog</p>')
+})
+app.patch('/blog/:id', (req, res) => {
+  res.send('<p>Hello Blog</p>')
+})
+app.delete('/blog/:id', (req, res) => {
+  res.send('<p>Hello Blog</p>')
+})
+
+
+//separator start login
+
 app.post('/login', (req, res) => {
 
   res.cookie('token', '12345')
@@ -143,7 +218,7 @@ app.post('/login', (req, res) => {
 })
 
 
-//separator
+//separator start logout
 
 
 app.delete('/logout', (req, res) => {
@@ -154,13 +229,15 @@ app.delete('/logout', (req, res) => {
     message: 'logout success'
   })
 })
-//middleware for unknown path
+//middleware for unknown path and error
+
 app.use((req, res) => {
   res.status(404).json({
     message: 'page not found'
   })
 })
 
+//separator server run
 
 app.listen(5000, () => {
   console.log("server running on http://localhost:5000");
