@@ -11,4 +11,3 @@ routeProfile.route('/profile/:id')
     .put(profileController.put)
     .patch(profileController.patch)
     .delete(profileController.remove);
-
