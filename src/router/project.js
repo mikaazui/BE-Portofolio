@@ -6,12 +6,12 @@ export const routeProject = express.Router();
 //separator start project
 
 
-routeProject.get('/project', projectController.get)
+routeProject.route('/project')
+    .get(projectController.get)
+    .post(projectController.post);
 
-routeProject.post('/project', projectController.post)
 
-routeProject.put('/project', projectController.put)
-
-routeProject.patch('/project', projectController.patch)
-
-routeProject.delete('/project', projectController.remove)
+routeProject.route('/project/:id')
+    .put(projectController.put)
+    .patch(projectController.patch)
+    .delete(projectController.remove)

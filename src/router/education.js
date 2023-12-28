@@ -2,12 +2,11 @@ import express from "express";
 import educationController from "../controller/educationController.js";
 export const routeEducation = express.Router();
 
-routeEducation.get('/education/:id', educationController.get)
+routeEducation.route('/education')
+    .get(educationController.get)
+    .post(educationController.post)
 
-routeEducation.post('/education', educationController.post)
-
-routeEducation.put('/education/:id', educationController.put)
-
-routeEducation.patch('/education/:id', educationController.patch)
-
-routeEducation.delete('/education/:id', educationController.remove)
+routeEducation.route('/education/:id')
+    .put(educationController.put)
+    .patch(educationController.patch)
+    .delete(educationController.remove)

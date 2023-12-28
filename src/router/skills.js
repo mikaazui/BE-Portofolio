@@ -2,12 +2,11 @@ import Express from "express";
 import skillsController from "../controller/skillsController.js";
 export const routeSkills = Express.Router();
 
-routeSkills.get('/skills/:id', skillsController.get)
+routeSkills.route('/skills')
+    .get(skillsController.get)
+    .post(skillsController.post)
 
-routeSkills.post('/skills', skillsController.post)
-
-routeSkills.put('/skills/:id', skillsController.put)
-
-routeSkills.patch('/skills/:id', skillsController.patch)
-
-routeSkills.delete('/skills/:id', skillsController.remove)
+routeSkills.route('/skills/:id')
+    .put(skillsController.put)
+    .patch(skillsController.patch)
+    .delete(skillsController.remove)
