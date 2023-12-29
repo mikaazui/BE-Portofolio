@@ -51,18 +51,25 @@ model blog {
 }
 
 model project {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(100)
-  description String   @db.Text
-  startDate   DateTime @default(now())
-  endDate     DateTime @default(now())
-  url         String?  @db.VarChar(255)
-  github      String?  @db.VarChar(255)
-  company     String?  @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  id          Int           @id @default(autoincrement())
+  title       String        @db.VarChar(100)
+  description String        @db.Text
+  status      ProjectStatus @default(ON_PROGRESS)
+  startDate   DateTime      @default(now())
+  endDate     DateTime      @default(now())
+  url         String?       @db.VarChar(255)
+  github      String?       @db.VarChar(255)
+  company     String?       @db.VarChar(255)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now())
 
   @@map("project")
+}
+
+enum ProjectStatus {
+  ON_PROGRESS
+  MAINTENANCE
+  COMPLETED
 }
 
 model education {
@@ -88,9 +95,8 @@ model skill {
 }
 
 model skill_category {
-  id             Int      @id @default(autoincrement())
-  title          String   @db.VarChar(100)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now())
-
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
