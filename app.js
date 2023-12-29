@@ -1,5 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import dotenv from 'dotenv';
 import { routeProfile } from "./src/router/profile.js";
 import { routeProject } from "./src/router/project.js";
 import { routeEducation } from "./src/router/education.js";
@@ -10,7 +11,7 @@ import { logging } from "./src/middleware/logging.js";
 import { routeUnknown } from "./src/middleware/unknown.js";
 
 const app = express();
-
+dotenv.config();
 app.use(express.json());
 app.use(cookieParser());
 //middleware untuk collect data dari client
@@ -47,7 +48,7 @@ app.use(routeAuth);
 
 app.use(routeUnknown);
 //separator server run
-
+const port = process.env.PORT
 app.listen(5000, () => {
-  console.log("server running on http://localhost:5000");
+ console.log("server running on http://localhost:" + port);
 })
