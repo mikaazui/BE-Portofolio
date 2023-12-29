@@ -11,10 +11,10 @@ datasource db {
 }
 
 model user {
-  name  String @db.VarChar(100)
-  email  String @id @db.VarChar(100)
-  password String @db.VarChar(200)
-  token String @db.VarChar(250)
+  name      String   @db.VarChar(100)
+  email     String   @id @db.VarChar(100)
+  password  String   @db.VarChar(200)
+  token     String   @db.VarChar(250)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -22,20 +22,75 @@ model user {
 }
 
 model profile {
-  email String @id @db.VarChar(100)
-  firstName String @db.VarChar(100)
-  lastName String @db.VarChar(100)
-  dob DateTime @db.Date
-  address String  @db.Text
-  bio String? @db.Text
-  website String? @db.VarChar(100)
-  instagram String? @db.VarChar(100)
-  github String? @db.VarChar(100)
-  linkedin String? @db.VarChar(100)
-  discord String? @db.VarChar(100)
-  twitter String? @db.VarChar(100)
+  email     String   @id @db.VarChar(100)
+  firstName String   @db.VarChar(100)
+  lastName  String   @db.VarChar(100)
+  dob       DateTime @db.Date
+  address   String   @db.Text
+  bio       String?  @db.Text
+  website   String?  @db.VarChar(100)
+  instagram String?  @db.VarChar(100)
+  github    String?  @db.VarChar(100)
+  linkedin  String?  @db.VarChar(100)
+  discord   String?  @db.VarChar(100)
+  twitter   String?  @db.VarChar(100)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
   @@map("profile")
+}
+
+model blog {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(100)
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@map("blog")
+}
+
+model project {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(100)
+  description String   @db.Text
+  startDate   DateTime @default(now())
+  endDate     DateTime @default(now())
+  url         String?  @db.VarChar(255)
+  github      String?  @db.VarChar(255)
+  company     String?  @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  @@map("project")
+}
+
+model education {
+  id              Int      @id @default(autoincrement())
+  insituitionName String   @db.VarChar(100)
+  city            String   @db.VarChar(100)
+  startYear       String   @db.VarChar(100)
+  endYear         DateTime @default(now())
+  major           DateTime @default(now())
+  degree          String   @db.VarChar(100)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now())
+
+  @@map("education")
+}
+
+model skill {
+  id             Int      @id @default(autoincrement())
+  title          String   @db.VarChar(100)
+  skill_category Int      @db.Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+}
+
+model skill_category {
+  id             Int      @id @default(autoincrement())
+  title          String   @db.VarChar(100)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+
 }
