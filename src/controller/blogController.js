@@ -12,22 +12,52 @@ const getAll = async (req, res) => {
 }
 
 const get = async (req, res) => {
+    try {
     let id = req.params.id
     id = parseInt(id)
     const blog = await Prisma.blog.findUnique({
         where: {
             id
         }
-    });
+    }) 
 
-    res.status(200).json({
-        message: 'berhasil masuk ke halaman blogs (berdasakan id)',
-        id: id,
-        blog: blog
 
-    })
+    //handle not found
+        if (blog == null) {
+            return res.status(404).json({
+                message: 'blog tidak ditemukan'
+            })
+        }
+
+        if(isNaN(id)){
+            res.status(400).json({
+                message: "ID invalid"
+            })
+        }
+        
+    
+        res.status(200).json({
+            message: 'berhasil masuk ke halaman blogs (berdasakan id)',
+            id: id,
+            blog: blog
+    
+        });
+        
+    } catch (error) {
+        res.status(500).json({
+            message: "server error :" + error.message
+        })
+    }
+
+
+
+
+
+
+
 
 }
+
 
 const post = (req, res) => {
     res.status(200).json({
@@ -64,4 +94,5 @@ export default {
     put,
     patch,
     remove
+
 }
