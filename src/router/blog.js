@@ -8,7 +8,7 @@ export const routeBlog = express.Router();
 
 routeBlog.get('/blogs', blogController.getAll);
 routeBlog.get('/blog/:id', blogController.get);
-routeBlog.post('blog', blogController.post);
+routeBlog.post('/blog', blogController.post);
 
 routeBlog.route('/blog/:id')
     .put(blogController.put)

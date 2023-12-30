@@ -10,9 +10,13 @@ import { routeAuth } from "./src/router/auth.js";
 import { logging } from "./src/middleware/logging.js";
 import { routeUnknown } from "./src/middleware/unknown.js";
 
+//deklaraai penggunaan apk express
 const app = express();
 dotenv.config();
+
+//untuk membaca json dari body
 app.use(express.json());
+
 app.use(cookieParser());
 //middleware untuk collect data dari client
 app.use(logging);
