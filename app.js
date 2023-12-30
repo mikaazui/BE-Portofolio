@@ -45,8 +45,8 @@ app.use(routeSkills);
 app.use(routeAuth);
 
 //middleware for unknown path and error
-
 app.use(routeUnknown);
+
 //separator server run
 const port = process.env.PORT
 app.listen(5000, () => {

@@ -1,6 +1,11 @@
-const get = (req, res) => {
+import { Prisma } from '../application/prisma.js'
+
+const get = async (req, res) => {
+    const blog = await Prisma.blog.findMany()
+    
     res.status(200).json({
         message: 'berhasil masuk ke halaman blog',
+        blog: blog
     })
 
 }
