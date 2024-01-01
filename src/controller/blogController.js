@@ -232,20 +232,16 @@ const updateBlogTitle = async (req, res) => {
         //end joi validation
 
         //start joi validate (blog)
-        const schema = joi.object({
-            title: joi.string().min(3).max(100).required().label('Title').trim()
-        })
+        const schemaTitle = joi.string().min(3).max(100).required().label('Title').trim()
+        const validationBlog = schemaTitle.validate(title)
 
-        const validationBlog = schema.validate(blog, ({
-            abortEarly: false
-        }));
         if (validationBlog.error) {
             return res.status(400).json({
                 message: validationBlog.error.message
             })
         }
 
-        blog = validationBlog.value
+        title = validationBlog.value
         //end joi validate(blog)
 
         const currentBlog = await Prisma.blog.findUnique({
@@ -269,7 +265,7 @@ const updateBlogTitle = async (req, res) => {
             where: {
                 id: id
             },
-            data: blog
+            title: title
         })
 
         res.status(200).json({
