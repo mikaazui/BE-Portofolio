@@ -71,20 +71,18 @@ const get = async (req, res) => {
 
 const post = async (req, res) => {
     try {
-        const blog = req.body;
-        // if (!blog.content || !blog.title) {
+        let blog = req.body;
         //     return res.status(400).json({
         //         message: 'blog must be filled'
         //     })
         // }
 
-        // if (blog.title.length < 3 || blog.content.length < 3) {
         //     return res.status(400).json({
         //         message: 'blog must be 3 characters or longer'
         //     })
 
         // }
-        //start joi calidate
+        //start joi validate (blog)
         const schema = joi.object({
             title: joi.string().min(3).max(100).required().label('Title').trim(),
             content: joi.string().min(3).required().label('Content').trim()
@@ -99,7 +97,8 @@ const post = async (req, res) => {
             })
         }
 
-        //end joi calidate
+        blog = validationBlog.value
+        //end joi validate(blog)
 
         const newBlog = await Prisma.blog.create({
             data: blog
@@ -120,34 +119,59 @@ const post = async (req, res) => {
 
 const put = async (req, res) => {
     try {
-        const blog = req.body;
+        let blog = req.body;
         let id = req.params.id;
 
-        if (isNaN(id)) {
+        // if (isNaN(id)) {
+        //     return res.status(400).json({
+        //         message: "ID invalid"
+        //     })
+        // }
+
+        // id = parseInt(id)
+        //     //400 bad request
+        //     return res.status(400).json({
+        //         message: 'blog must be filled'
+        //     })
+        // }
+
+        //     return res.status(400).json({
+        //         message: 'blog must be 3 characters or longer'
+        //     })
+
+        // }
+
+        //start joi validation(id)
+        const schemaId = joi.number().min(1).positive().label("id").required();
+        const validation = schemaId.validate(id)
+
+        if (validation.error) {
             return res.status(400).json({
-                message: "ID invalid"
+                message: validation.error.message
+            })
+        }
+        console.log('validation<<<<<<<<<<<<<<<')
+        console.log(validation)
+        id = validation.value;
+        //end joi validation (id)
+
+        //start joi validate (blog)
+        const schema = joi.object({
+            title: joi.string().min(3).max(100).required().label('Title').trim(),
+            content: joi.string().min(3).required().label('Content').trim()
+        })
+
+        const validationBlog = schema.validate(blog, ({
+            abortEarly: false
+        }));
+        if (validationBlog.error) {
+            return res.status(400).json({
+                message: validationBlog.error.message
             })
         }
 
-        id = parseInt(id)
-        console.log(id)
-
-        console.log(blog)
-
-        if (!blog.content || !blog.title) {
-            //400 bad request
-            return res.status(400).json({
-                message: 'blog must be filled'
-            })
-        }
-
-        if (blog.title.length < 3 || blog.content.length < 3) {
-            //bad reuqest content less than 3 characters
-            return res.status(400).json({
-                message: 'blog must be 3 characters or longer'
-            })
-
-        }
+        blog = validationBlog.value
+        //end joi validate(blog)
 
         const currentBlog = await Prisma.blog.findUnique({
             where: {
@@ -192,31 +216,37 @@ const updateBlogTitle = async (req, res) => {
     try {
         const blog = req.body;
         let id = req.params.id;
-        if (isNaN(id)) {
+
+        //start joi validation
+        const schemaId = joi.number().min(1).positive().label("id").required();
+        const validation = schemaId.validate(id)
+
+        if (validation.error) {
             return res.status(400).json({
-                message: "ID invalid"
+                message: validation.error.message
+            })
+        }
+        console.log('validation<<<<<<<<<<<<<<<')
+        console.log(validation)
+        id = validation.value;
+        //end joi validation
+
+        //start joi validate (blog)
+        const schema = joi.object({
+            title: joi.string().min(3).max(100).required().label('Title').trim()
+        })
+
+        const validationBlog = schema.validate(blog, ({
+            abortEarly: false
+        }));
+        if (validationBlog.error) {
+            return res.status(400).json({
+                message: validationBlog.error.message
             })
         }
 
-        id = parseInt(id)
-        console.log(id)
-
-        console.log(blog)
-
-        if (!blog.title) {
-            //400 bad request
-            return res.status(400).json({
-                message: 'title must be filled'
-            })
-        }
-
-        if (blog.title.length < 3) {
-            //bad reuqest content less than 3 characters
-            return res.status(400).json({
-                message: 'title must be 3 characters or longer'
-            })
-
-        }
+        blog = validationBlog.value
+        //end joi validate(blog)
 
         const currentBlog = await Prisma.blog.findUnique({
             where: {
@@ -260,13 +290,26 @@ const remove = async (req, res) => {
     try {
         let id = req.params.id;
 
-        if (isNaN(id)) {
+        // if (isNaN(id)) {
+        //     return res.status(400).json({
+        //         message: "ID invalid"
+        //     })
+        // }
+        // id = parseInt(id)
+
+        //start joi validation
+        const schema = joi.number().min(1).positive().label("id").required();
+        const validation = schema.validate(id)
+
+        if (validation.error) {
             return res.status(400).json({
-                message: "ID invalid"
+                message: validation.error.message
             })
         }
-        id = parseInt(id)
-
+        console.log('validation<<<<<<<<<<<<<<<')
+        console.log(validation)
+        id = validation.value;
+        //end joi validation
         const currentBlog = await Prisma.blog.findUnique({
             where: {
                 id
