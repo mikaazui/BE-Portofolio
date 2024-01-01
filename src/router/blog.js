@@ -12,5 +12,6 @@ routeBlog.post('/blog', blogController.post);
 
 routeBlog.route('/blog/:id')
     .put(blogController.put)
-    .patch(blogController.patch)
     .delete(blogController.remove)
+
+routeBlog.patch('/update_blog_title/:id', blogController.updateBlogTitle);
