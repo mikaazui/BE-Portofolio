@@ -20,7 +20,7 @@ const get = async (req, res) => {
         //     return res.status(400).json({
         //         message: "ID invalid"
         //     }
-//////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////
         // if (isNaN(id)) {
         //     return res.status(400).json({
         //         message: "ID invalid"
@@ -29,18 +29,18 @@ const get = async (req, res) => {
 
         // id = parseInt(id)
 
-        const schema = joi.number().min(1).required();
+        const schema = joi.number().min(1).label("id").required();
         const validation = schema.validate(id)
 
-        if(validation.error){
-            res.status(400).json({
+        if (validation.error) {
+            return res.status(400).json({
                 message: validation.error.message
             })
         }
         console.log('validation<<<<<<<<<<<<<<<')
         console.log(validation)
         id = validation.value;
-        
+
 
         const blog = await Prisma.blog.findUnique({
             where: {
@@ -72,19 +72,34 @@ const get = async (req, res) => {
 const post = async (req, res) => {
     try {
         const blog = req.body;
-        if (!blog.content || !blog.title) {
+        // if (!blog.content || !blog.title) {
+        //     return res.status(400).json({
+        //         message: 'blog must be filled'
+        //     })
+        // }
+
+        // if (blog.title.length < 3 || blog.content.length < 3) {
+        //     return res.status(400).json({
+        //         message: 'blog must be 3 characters or longer'
+        //     })
+
+        // }
+        //start joi calidate
+        const schema = joi.object({
+            title: joi.string().min(3).required().label('Title'),
+            content: joi.string().min(3).required().label('Content')
+        })
+
+        const validationBlog = schema.validate(blog, ({
+            abortEarly: false
+        }));
+        if (validationBlog.error) {
             return res.status(400).json({
-                message: 'blog must be filled'
+                message: validationBlog.error.message
             })
         }
 
-        if (blog.title.length < 3 || blog.content.length < 3) {
-            return res.status(400).json({
-                message: 'blog must be 3 characters or longer'
-            })
-
-        }
-
+        //end joi calidate
 
         const newBlog = await Prisma.blog.create({
             data: blog
@@ -229,14 +244,14 @@ const updateBlogTitle = async (req, res) => {
 
         res.status(200).json({
             message: `blog ${id} updated (title) successfully`,
-            data: updatedTitle  
+            data: updatedTitle
         });
-        
+
     } catch (error) {
         res.status(500).json({
             message: "server error :" + error.message
         });
-        
+
     }
 
 }
@@ -281,9 +296,9 @@ const remove = async (req, res) => {
             message: 'deleted blog successfully',
             id: id
         })
-        
+
     } catch (error) {
-        
+
     }
 
 }
