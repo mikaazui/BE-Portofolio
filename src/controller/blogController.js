@@ -1,4 +1,5 @@
 import { Prisma } from '../application/prisma.js'
+import joi from 'joi'
 
 const getAll = async (req, res) => {
 
@@ -19,14 +20,27 @@ const get = async (req, res) => {
         //     return res.status(400).json({
         //         message: "ID invalid"
         //     }
+//////////////////////////////////////////////////////////////
+        // if (isNaN(id)) {
+        //     return res.status(400).json({
+        //         message: "ID invalid"
+        //     })
+        // }
 
-        if (isNaN(id)) {
-            return res.status(400).json({
-                message: "ID invalid"
+        // id = parseInt(id)
+
+        const schema = joi.number().min(1).required();
+        const validation = schema.validate(id)
+
+        if(validation.error){
+            res.status(400).json({
+                message: validation.error.message
             })
         }
-
-        id = parseInt(id)
+        console.log('validation<<<<<<<<<<<<<<<')
+        console.log(validation)
+        id = validation.value;
+        
 
         const blog = await Prisma.blog.findUnique({
             where: {
@@ -44,7 +58,7 @@ const get = async (req, res) => {
         res.status(200).json({
             message: 'berhasil masuk ke halaman blogs (berdasakan id)',
             id: id,
-            blog: blog
+            data: blog
 
         });
     } catch (error) {
