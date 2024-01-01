@@ -58,18 +58,18 @@ const get = async (req, res) => {
 const post = async (req, res) => {
     try {
         const blog = req.body;
-        if(!blog.content || !blog.title) {
+        if (!blog.content || !blog.title) {
             return res.status(400).json({
                 message: 'blog must be filled'
             })
         }
 
         if (blog.title.length < 3 || blog.content.length < 3) {
-                return res.status(400).json({
-                    message: 'blog must be 3 characters or longer'
-                })
+            return res.status(400).json({
+                message: 'blog must be 3 characters or longer'
+            })
 
-            }
+        }
 
 
         const newBlog = await Prisma.blog.create({
@@ -89,10 +89,73 @@ const post = async (req, res) => {
 
 }
 
-const put = (req, res) => {
-    res.status(200).json({
-        message: 'berhasil masuk ke halaman blog',
-    })
+const put = async (req, res) => {
+    try {
+        const blog = req.body;
+        let id = req.params.id;
+
+        if (isNaN(id)) {
+            return res.status(400).json({
+                message: "ID invalid"
+            })
+        }
+
+        id = parseInt(id)
+        console.log(id)
+
+        console.log(blog)
+
+        if (!blog.content || !blog.title) {
+            //400 bad request
+            return res.status(400).json({
+                message: 'blog must be filled'
+            })
+        }
+
+        if (blog.title.length < 3 || blog.content.length < 3) {
+            //bad reuqest content less than 3 characters
+            return res.status(400).json({
+                message: 'blog must be 3 characters or longer'
+            })
+
+        }
+
+        const currentBlog = await Prisma.blog.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                id: true
+            }
+        }
+        )
+
+        if (!currentBlog) {
+            return res.status(404).json({
+                message: 'blog ${id} tidak ditemukan'
+            })
+        }
+
+        const updatedData = await Prisma.blog.update({
+            where: {
+                id: id
+            },
+            data: blog
+        })
+
+        res.status(200).json({
+            message: 'Blog ${id} updated successfully',
+            id: id,
+            updatedData: updatedData
+        })
+
+
+
+    } catch (error) {
+        res.status(500).json({
+            message: "server error :" + error.message
+        })
+    }
 
 }
 
