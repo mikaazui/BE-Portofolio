@@ -17,7 +17,7 @@ const get = async (req, res, next) => {
     try {
         let id = req.params.id;
         id = Validate(isID, id);
-        
+
         const education = await Prisma.education.findUnique({
             where: {
                 id
@@ -37,14 +37,14 @@ const get = async (req, res, next) => {
             data: education
 
         });
-        
+
     } catch (error) {
         next(error)
     }
 
 }
 
-const  post = async (req, res, next) => {
+const post = async (req, res, next) => {
     try {
         let education = req.body;
         education = Validate(isEducation, education)
@@ -57,10 +57,10 @@ const  post = async (req, res, next) => {
             message: 'saved to data blog',
             data: newEducation
         })
-     
+
     } catch (error) {
         next(error)
-        
+
     }
 
 }
