@@ -1,5 +1,8 @@
 import { Prisma } from '../application/prisma.js'
+import { Validate } from '../application/validate.js'
 import joi from 'joi'
+
+
 
 const getAll = async (req, res) => {
 
@@ -12,7 +15,7 @@ const getAll = async (req, res) => {
 
 }
 
-const get = async (req, res) => {
+const get = async (req, res, next) => {
     try {
         let id = req.params.id
         // cara lain dari isNaN
@@ -30,16 +33,16 @@ const get = async (req, res) => {
         // id = parseInt(id)
 
         const schema = joi.number().min(1).positive().label("id").required();
-        const validation = schema.validate(id)
+        // const validation = schema.validate(id)
 
-        if (validation.error) {
-            return res.status(400).json({
-                message: validation.error.message
-            })
-        }
-        console.log('validation<<<<<<<<<<<<<<<')
-        console.log(validation)
-        id = validation.value;
+        // if (validation.error) {
+        //     return res.status(400).json({
+        //         message: validation.error.message
+        //     })
+        // }
+        // console.log('validation<<<<<<<<<<<<<<<')
+        // console.log(validation)
+        // id = validation.value;
 
 
         const blog = await Prisma.blog.findUnique({
@@ -62,14 +65,13 @@ const get = async (req, res) => {
 
         });
     } catch (error) {
-        res.status(500).json({
-            message: "server error :" + error.message
-        })
+
+        next(error)
     }
 }
 
 
-const post = async (req, res) => {
+const post = async (req, res, next) => {
     try {
         let blog = req.body;
         //     return res.status(400).json({
@@ -110,14 +112,12 @@ const post = async (req, res) => {
         })
 
     } catch (error) {
-        res.status(500).json({
-            message: "server error :" + error.message
-        })
+        next(error)
     }
 
 }
 
-const put = async (req, res) => {
+const put = async (req, res, next) => {
     try {
         let blog = req.body;
         let id = req.params.id;
@@ -205,14 +205,12 @@ const put = async (req, res) => {
 
 
     } catch (error) {
-        res.status(500).json({
-            message: "server error :" + error.message
-        })
+        next(error)
     }
 
 }
 
-const updateBlogTitle = async (req, res) => {
+const updateBlogTitle = async (req, res, next) => {
     try {
         const blog = req.body;
         let id = req.params.id;
@@ -274,15 +272,13 @@ const updateBlogTitle = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({
-            message: "server error :" + error.message
-        });
+        next(error)
 
     }
 
 }
 
-const remove = async (req, res) => {
+const remove = async (req, res, next) => {
     try {
         let id = req.params.id;
 
@@ -337,7 +333,7 @@ const remove = async (req, res) => {
         })
 
     } catch (error) {
-
+        next(error)
     }
 
 }

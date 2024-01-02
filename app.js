@@ -50,9 +50,27 @@ app.use(routeAuth);
 
 //middleware for unknown path and error
 app.use(routeUnknown);
+//super duper doopie daba daba dibi dibi bam bam ga paham.   
+app.use((error, req, res, next) => {
+  if (!error) {
+    return next()
+  }
+  if (error instanceof joiError) {
+    return res.status(error.status).json({
+      message: error.message
+    }).end();
+    
+  }else{
+    res.status(500).json({
+      message: 'server error' + error.message
+    })
+  }
+})
+
+
 
 //separator server run
 const port = process.env.PORT
 app.listen(5000, () => {
- console.log("server running on http://localhost:" + port);
+  console.log("server running on http://localhost:" + port);
 })
