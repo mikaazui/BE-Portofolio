@@ -9,7 +9,7 @@ import { routeSkills } from "./src/router/skills.js";
 import { routeAuth } from "./src/router/auth.js";
 import { logging } from "./src/middleware/logging.js";
 import { routeUnknown } from "./src/middleware/unknown.js";
-
+import { joiError } from "./src/application/validate.js";
 //deklaraai penggunaan apk express
 const app = express();
 dotenv.config();
