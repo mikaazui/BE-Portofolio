@@ -1,6 +1,6 @@
 import { Prisma } from '../application/prisma.js'
 import { Validate } from '../application/validate.js'
-import { ResponseError } from '../error/ResponseError.js'
+import { ResponseError } from '../error/responseError.js'
 import { isBlog, isBlogTitle } from '../validation/blogValidation.js'
 import { isID } from '../validation/mainValidation.js'
 

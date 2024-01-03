@@ -29,9 +29,7 @@ const get = async (req, res, next) => {
 
         //handle not found
         if (education == null) {
-            return res.status(404).json({
-                message: 'education tidak ditemukan'
-            })
+          throw new ResponseError(404, `education ${id} not found`)
         }
 
         res.status(200).json({
@@ -87,9 +85,7 @@ const put = async (req, res, next) => {
         )
 
         if (!currentEducation) {
-            return res.status(404).json({
-                message: `education ${id} not found`
-            })
+            throw new ResponseError(404, `education ${id} not found`)
         }
 
         const updatedData = await Prisma.education.update({
@@ -126,9 +122,7 @@ const remove = async (req, res, next) => {
         )
 
         if (!currentEducation) {
-            return res.status(404).json({
-                message: `education ${id} not found`
-            })
+            throw new ResponseError(404, `education ${id} not found`)
         }
 
         //delete execution
