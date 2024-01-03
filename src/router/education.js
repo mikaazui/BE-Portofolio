@@ -3,10 +3,11 @@ import educationController from "../controller/educationController.js";
 export const routeEducation = express.Router();
 
 
-routeEducation.route('/educations', educationController.getAll);
+routeEducation.get('/educations', educationController.getAll);
 
-routeEducation.route('/education', educationController.post);
+routeEducation.post('/education', educationController.post);
 
 routeEducation.route('/education/:id')
+    .get(educationController.get)
     .put(educationController.put)
     .delete(educationController.remove)

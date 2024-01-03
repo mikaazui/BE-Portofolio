@@ -1,7 +1,9 @@
 import { Prisma } from '../application/prisma.js'
 import { Validate } from '../application/validate.js'
+import { ResponseError } from '../error/ResponseError.js'
 import { isBlog, isBlogTitle } from '../validation/blogValidation.js'
 import { isID } from '../validation/mainValidation.js'
+
 
 
 
@@ -29,9 +31,7 @@ const get = async (req, res, next) => {
 
         //handle not found
         if (blog == null) {
-            return res.status(404).json({
-                message: 'blog tidak ditemukan'
-            })
+            throw new ResponseError(404, `blog ${id} not found`)
         }
 
         res.status(200).json({
@@ -85,9 +85,7 @@ const put = async (req, res, next) => {
         )
 
         if (!currentBlog) {
-            return res.status(404).json({
-                message: `blog ${id} not found`
-            })
+            throw new ResponseError(404, `blog ${id} not found`)
         }
 
         const updatedData = await Prisma.blog.update({
@@ -113,7 +111,7 @@ const updateBlogTitle = async (req, res, next) => {
 
         id = Validate(isID, id);
         title = Validate(isBlogTitle, title);
-        
+
         const currentBlog = await Prisma.blog.findUnique({
             where: {
                 id: id
@@ -125,9 +123,7 @@ const updateBlogTitle = async (req, res, next) => {
         )
 
         if (!currentBlog) {
-            return res.status(404).json({
-                message: `blog ${id} not found`
-            })
+            throw new ResponseError(404, `blog ${id} not found`)
         }
         //execution (patch)
 
@@ -166,9 +162,7 @@ const remove = async (req, res, next) => {
         )
 
         if (!currentBlog) {
-            return res.status(404).json({
-                message: `blog ${id} not found`
-            })
+            throw new ResponseError(404, `blog ${id} not found`)
         }
 
         //delete execution

@@ -3,13 +3,16 @@ import { isEducation } from "../validation/educationvalidation.js";
 import { isID } from "../validation/mainValidation.js";
 
 const getAll = async (req, res) => {
-
+    console.log('masuk ========================')
     const education = await Prisma.education.findMany()
+    if (education) {
 
-    res.status(200).json({
-        message: 'berhasil masuk ke halaman education (semua data)',
-        education: education
-    })
+        res.status(200).json({
+            message: 'berhasil masuk ke halaman education (semua data)',
+            education: education
+        })
+
+    }
 
 }
 
