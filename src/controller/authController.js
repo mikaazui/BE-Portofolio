@@ -33,18 +33,30 @@ const login = async (req, res, next) => {
         //create TOKEN
         const jwtSecretToken = 'SECRET_TOKEN_VAL'
         const maxAge = 60 * 60
-        const token = jwt.sign({ email: user.email }, jwtSecretToken, {
+        let token = jwt.sign({ email: user.email }, jwtSecretToken, {
             expiresIn: maxAge
         })
-
-
+        //update data user > send token
+        const data = await Prisma.user.update({
+            where: {
+                email: loginData.email
+            },
+            data: {
+                token: token
+            },  
+            select: {
+                name: true,
+                email: true
+            }
+        })
         //send cookies
+        console.log(data)
         res.cookie('token', token)
 
+        //ambil datauser 
         res.status(200).json({
             message: 'login success',
-            data: loginData,
-            checkPass: checkPass,
+            data: data,
             token: token
         })
 
