@@ -1,4 +1,6 @@
 import { Prisma } from "../application/prisma.js";
+import { Validate } from "../application/validate.js";
+import { ResponseError } from "../error/responseError.js";
 import { isEducation } from "../validation/educationvalidation.js";
 import { isID } from "../validation/mainValidation.js";
 

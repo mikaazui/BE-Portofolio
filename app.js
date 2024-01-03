@@ -73,7 +73,8 @@ app.use((error, req, res, next) => {
   }
   //server error
     res.status(500).json({
-      message: 'server error' + error.message
+      message: 'server error' + error.message,
+      log: console.log(error)
     })
   }
 
