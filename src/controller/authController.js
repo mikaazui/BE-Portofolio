@@ -1,15 +1,61 @@
-const login = (req, res) => {
+import { Prisma } from "../application/prisma.js"
+import { Validate } from "../application/validate.js"
+import { ResponseError } from "../error/responseError.js";
+import { loginValidate } from "../validation/authValidate.js"
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt';
 
-    res.cookie('token', '12345')
-    res.cookie('name', 'valent')
+const login = async (req, res, next) => {
+    try {
+        //ambil data > email && password
+        let loginData = req.body
+        console.log(loginData)
+        loginData = Validate(loginValidate, loginData)
 
-    res.status(200).json({
-        message: 'login success',
-    })
+        //check email
+        const user = await Prisma.user.findUnique({
+            where: {
+                email: loginData.email
+            }
+        })
 
+        if (!user) {
+            throw new ResponseError(400, 'Email or Password is Invalid')
+        }
+
+        //check password
+        const clientPass = loginData.password;
+        const dbPass = user.password;
+        const checkPass = await bcrypt.compare(clientPass, dbPass);
+
+        if (!checkPass) throw new ResponseError(400, 'Email or Password is Invalid')
+
+        //create TOKEN
+        const jwtSecretToken = 'SECRET_TOKEN_VAL'
+        const maxAge = 60 * 60
+        const token = jwt.sign({ email: user.email }, jwtSecretToken, {
+            expiresIn: maxAge
+        })
+
+
+        //send cookies
+        res.cookie('token', token)
+
+        res.status(200).json({
+            message: 'login success',
+            data: loginData,
+            checkPass: checkPass,
+            token: token
+        })
+
+
+    } catch (error) {
+        next(error)
+
+    }
 }
 
-const logout = (req, res) => {
+const logout = async (req, res, next) => {
     res.clearCookie('token')
     res.clearCookie('name')
 
