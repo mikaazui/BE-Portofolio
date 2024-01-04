@@ -12,18 +12,18 @@ const login = async (req, res, next) => {
         console.log(loginData)
         loginData = Validate(loginValidate, loginData)
 
-        //check email
+        //check email (in databse or not)
         const user = await Prisma.user.findUnique({
             where: {
                 email: loginData.email
             }
         })
-
+        //check email
         if (!user) {
             throw new ResponseError(400, 'Email or Password is Invalid')
         }
 
-        //check password
+        //check password/compare password
         const clientPass = loginData.password;
         const dbPass = user.password;
         const checkPass = await bcrypt.compare(clientPass, dbPass);
@@ -48,7 +48,7 @@ const login = async (req, res, next) => {
                 name: true,
                 email: true
             }
-        })
+        });
         //send cookies
         console.log(data)
         res.cookie('token', token)
