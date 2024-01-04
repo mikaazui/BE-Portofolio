@@ -40,6 +40,11 @@ export const authMiddleware = async (req, res, next) => {
       var newToken = jwt.sign({ email: user.email }, jwtSecretToken, {
         expiresIn: maxAge
       });
+
+      //masukin data user ke request
+      req.user = user;
+
+      console.log(req.user)
   
      await Prisma.user.update({
         where: {
