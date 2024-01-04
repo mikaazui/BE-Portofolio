@@ -1,13 +1,14 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-// import { Prisma } from '../application/prisma.js'
+import { Prisma } from '../application/prisma.js'
 dotenv.config()
 
-const createToken = () => {
+const createToken = (res, token) => {
      //create TOKEN
      const jwtSecretToken = process.env.JWT_SECRET
      const maxAge = 60 * 60
-     let token = jwt.sign({ email: email }, jwtSecretToken, {
+     const email = Prisma.user.email
+     var token = jwt.sign({ email: email }, jwtSecretToken, {
          expiresIn: maxAge
      });
      return token;
