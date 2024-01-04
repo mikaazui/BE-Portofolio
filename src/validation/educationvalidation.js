@@ -14,3 +14,12 @@ const isEducation = joi.object({
 export {
     isEducation
 }
+// things that should be filled
+// {
+//     "insituitionName": "bodong school",
+//     "degree": "no degree",
+//     "city": "florida",
+//     "major": "computer science",
+//     "startYear": 2008,
+//     "endYear": 2020
+// }
