@@ -11,27 +11,24 @@ import { logging } from "./src/middleware/logging.js";
 import { routeUnknown } from "./src/middleware/unknown.js";
 import { ResponseError } from "./src/error/responseError.js";
 import Joi from "joi";
+import { errorMid } from "./src/middleware/errorMid.js";
+import { routerPublic } from "./src/router/public.js";
 //deklaraai penggunaan apk express
 const app = express();
 dotenv.config();
 
 //untuk membaca json dari body
 app.use(express.json());
-
+//untuk membaca cookie
 app.use(cookieParser());
+
 //middleware untuk collect data dari client
 app.use(logging);
 
-app.get('/', (req, res) => {
-  res.send('<p>Hello World</p>')
-  res.status(200).json({
-    message: 'berhasil masuk ke halaman home',
-  })
-})
-
+//public api
+app.use(routerPublic)
 
 //profile
-
 app.use(routeProfile);
 
 //project
@@ -53,32 +50,7 @@ app.use(routeAuth);
 app.use(routeUnknown);
 
 //middleware for error   
-app.use((error, req, res, next) => {
-  if (!error) {
-    return next()
-  }
-  //response error
-  if (error instanceof ResponseError) {
-    res.status(error.status).json({
-      message: error.message
-    }).end();
-    return;
-  }
-  //joi error
-  if (error instanceof Joi.ValidationError) {
-    res.status(400).json({
-      message: error.message
-    }).end();
-    return;
-  }
-  //server error
-    res.status(500).json({
-      message: 'server error' + error.message,
-      log: console.log(error)
-    })
-  }
-
-)
+app.use(errorMid);
 
 
 
