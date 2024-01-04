@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { ResponseError } from "../error/responseError";
+import { ResponseError } from "../error/responseError.js";
 
 export const errorMid = ((error, req, res, next) => {
     if (!error) {
