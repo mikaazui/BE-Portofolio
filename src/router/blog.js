@@ -6,7 +6,7 @@ export const routeBlog = express.Router();
 //     .get(blogController.get)
 //     .post(blogController.post)
 
-
+//semua route butuh check auth
 
 routeBlog.post('/blog', blogController.post); //create post/blog
 routeBlog.patch('/update_blog_title/:id', blogController.updateBlogTitle);

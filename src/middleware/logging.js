@@ -14,7 +14,7 @@ const logging = (req, res, next) => {
       protocol: req.protocol,
   
     }
-    console.info(log)
+    // console.info(log)
   
     next()
   }

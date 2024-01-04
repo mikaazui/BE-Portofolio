@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 
 const login = async (req, res, next) => {
     try {
+        console.log('masuk proses login')
         //ambil data > email && password
         let loginData = req.body
         console.log(loginData)
