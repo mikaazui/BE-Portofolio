@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken'
 import { Prisma } from '../application/prisma.js';
+import authService from '../services/authService.js';
 
 export const authMiddleware = async (req, res, next) => {
     try {
@@ -36,24 +37,26 @@ export const authMiddleware = async (req, res, next) => {
       const jwtSecretToken = process.env.JWT_SECRET;
       jwt.verify(token, jwtSecretToken);
       //perbarui token
-      const maxAge = 60 * 60
-      var newToken = jwt.sign({ email: user.email }, jwtSecretToken, {
-        expiresIn: maxAge
-      });
+      // const maxAge = 60 * 60
+      // var newToken = jwt.sign({ email: user.email }, jwtSecretToken, {
+      //   expiresIn: maxAge
+      // });
 
-      //masukin data user ke request
-      req.user = user;
+      const email = user.email
+      const newToken = authService.createToken(res, email)
+      
+    //  await Prisma.user.update({
+      //     where: {
+    //         email: user.email
+    //     },
+    //     data: {
+    //         token: newToken
+    //     }
+    // });
 
-      console.log(req.user)
-  
-     await Prisma.user.update({
-        where: {
-            email: user.email
-        },
-        data: {
-            token: newToken
-        }
-    });
+    const dataUser = await authService.updateUserToken(email, newToken)
+    //masukin data user ke request
+    req.user = data.user;
   
       //kirim cookie
       res.cookie('token', newToken) 

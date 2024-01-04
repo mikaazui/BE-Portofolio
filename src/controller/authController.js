@@ -5,6 +5,7 @@ import { ResponseError } from "../error/responseError.js";
 import { loginValidate } from "../validation/authValidate.js"
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt';
+import authService from '../services/authService.js';
 
 const login = async (req, res, next) => {
     try {
@@ -32,29 +33,35 @@ const login = async (req, res, next) => {
 
         if (!checkPass) throw new ResponseError(400, 'Email or Password is Invalid')
 
-        //create TOKEN
-        const jwtSecretToken = process.env.JWT_SECRET
-        const maxAge = 60 * 60
-        let token = jwt.sign({ email: user.email }, jwtSecretToken, {
-            expiresIn: maxAge
-        })
-        //update data user > send token
-        const data = await Prisma.user.update({
-            where: {
-                email: loginData.email
-            },
-            data: {
-                token: token
-            },  
-            select: {
-                name: true,
-                email: true
-            }
-        });
-        //send cookies
-        console.log(data)
-        res.cookie('token', token)
+        // //create TOKEN
+        // const jwtSecretToken = process.env.JWT_SECRET
+        // const maxAge = 60 * 60
+        // let token = jwt.sign({ email: user.email }, jwtSecretToken, {
+        //     expiresIn: maxAge
+        // })
+        //create token
+        const email = user.email
+        const token = authService.createToken(res, email);
 
+        //  //send cookies
+        //  console.log(data)
+        //  res.cookie('token', token)
+ 
+        // //update data user > send token
+        // const data = await Prisma.user.update({
+        //     where: {
+        //         email: loginData.email
+        //     },
+        //     data: {
+        //         token: token
+        //     },
+        //     select: {
+        //         name: true,
+        //         email: true
+        //     }
+        // });
+       
+        const data = await authService.updateUserToken(email, token)
         //ambil datauser 
         res.status(200).json({
             message: 'login success',
