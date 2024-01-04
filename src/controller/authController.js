@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import { Prisma } from "../application/prisma.js"
 import { Validate } from "../application/validate.js"
 import { ResponseError } from "../error/responseError.js";
@@ -32,7 +33,7 @@ const login = async (req, res, next) => {
         if (!checkPass) throw new ResponseError(400, 'Email or Password is Invalid')
 
         //create TOKEN
-        const jwtSecretToken = 'SECRET_TOKEN_VAL'
+        const jwtSecretToken = process.env.JWT_SECRET
         const maxAge = 60 * 60
         let token = jwt.sign({ email: user.email }, jwtSecretToken, {
             expiresIn: maxAge
