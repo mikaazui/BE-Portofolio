@@ -6,7 +6,7 @@ dotenv.config()
 const createToken = (res, email) => {
     //create TOKEN
     const jwtSecretToken = process.env.JWT_SECRET
-    const maxAge = 60 * 60
+    const maxAge = process.env.SESSION_AGE
     var token = jwt.sign({ email: email }, jwtSecretToken, {
         expiresIn: maxAge
     });
