@@ -10,7 +10,7 @@ export const authMiddleware = async (req, res, next) => {
       //check cookie 
       const token = req.cookies.token;
       console.log(token)
-      if (!token) {
+       if  (!token) {
         return res.status(401).json({
           message: 'Unauthorized'
         })
@@ -56,7 +56,7 @@ export const authMiddleware = async (req, res, next) => {
 
     const dataUser = await authService.updateUserToken(email, newToken)
     //masukin data user ke request
-    req.user = data.user;
+    req.user = dataUser.user;
   
       //kirim cookie
       res.cookie('token', newToken) 
