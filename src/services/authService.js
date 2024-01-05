@@ -8,7 +8,7 @@ const createToken = (res, token) => {
      const jwtSecretToken = process.env.JWT_SECRET
      const maxAge = 60 * 60
      const email = Prisma.user.email
-     var token = jwt.sign({ email: email }, jwtSecretToken, {
+     var token = jwt.sign ({ email: email }, jwtSecretToken, {
          expiresIn: maxAge
      });
      return token;
