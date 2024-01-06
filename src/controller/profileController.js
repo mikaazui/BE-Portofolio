@@ -1,19 +1,6 @@
 const get = (req, res) => {
-    res.status(200).format({
-
-        json: () => {
-            res.send({
-                id: req.params.id,
-                ip: req.ip,
-                query: req.query,
-                body: req.body,
-                path: req.path,
-                params: req.params,
-                cookies: req.cookies,
-                protocol: req.protocol,
-
-            })
-        },
+    res.status(200).json({
+        message: "berhasil dapet data profile"
     })
 
 

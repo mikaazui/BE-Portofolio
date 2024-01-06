@@ -56,11 +56,11 @@ const logout = async (req, res, next) => {
     try {
         //UPDATE DATA USER
         const user = req.user;
-        if (!user || !user.email) {
-            throw new ResponseError(400, 'Invalid user data');
-        }
+        console.log('user=======================')
         console.log(user)
         const email = user.email;
+        console.log('email=======================')
+        console.log(email)
         await Prisma.user.update({
             where: {
                 email: email
@@ -69,23 +69,23 @@ const logout = async (req, res, next) => {
                 token: null
             },
             select: {
-            email:true
+                email: true
             }
         });
         //bikin token umur 1 detik
         authService.createToken(res, email, '1s')
-    
+
         //reset cookies
         res.clearCookie('token')
-    
+
         //send data success
         res.status(200).json({
             message: 'logout success'
         })
-        
+
     } catch (error) {
         next(error)
-        
+
     }
 }
 
