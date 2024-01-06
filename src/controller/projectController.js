@@ -89,10 +89,11 @@ const put =  async (req, res, next) => {
             where: {
                 id: id
             },
-            data: updatedData
+            data: project
         })
         res.status(200).json({
-            message: 'berhasil masuk ke halaman project',
+            message: `berhasil mengupdate project ${id}`,
+            data: updatedData
         })
         
     } catch (error) {
