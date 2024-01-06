@@ -34,7 +34,7 @@ const get = async (req, res, next) => {
             throw new ResponseError(404, `project ${id} not found`)
         }
         res.status(200).json({
-            message: 'berhasil masuk ke halaman project',
+            message:  `berhasil mendapatkan project ${id}`,
         })
         
     } catch (error) {
@@ -128,7 +128,7 @@ const remove = async (req, res, next) => {
             }
         })
         res.status(200).json({
-            message: 'berhasil menghapus data project',
+            message: `berhasil menghapus project ${id}`,
         })
         
     } catch (error) {
