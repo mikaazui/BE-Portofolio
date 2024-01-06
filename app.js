@@ -24,9 +24,9 @@ app.use(cookieParser());
 //middleware untuk collect data dari client
 app.use(logging);
 
-app.use(routerPublic)
 //taruh paling atas
 //public api
+app.use(routerPublic)
 
 
 app.use(authMiddleware)
