@@ -2,19 +2,6 @@ const get = (req, res) => {
     res.status(200).json({
         message: "berhasil dapet data profile"
     })
-
-
-}
-
-const post = (req, res) => {
-    res.status(200).json({
-        id: req.params.id,
-        ip: req.ip,
-        query: req.query,
-        body: req.body,
-        path: req.path,
-        params: req.params
-    })
 }
 
 const put = (req, res) => {
@@ -37,32 +24,9 @@ const put = (req, res) => {
     })
 }
 
-const patch = (req, res) => {
-    res.status(200).json({
-        id: req.params.id,
-        ip: req.ip,
-        query: req.query,
-        body: req.body,
-        path: req.path,
-        params: req.params
-    })
-}
 
-const remove = (req, res) => {
-    res.status(200).json({
-        id: req.params.id,
-        ip: req.ip,
-        body: req.body,
-        query: req.query,
-        path: req.path,
-        params: req.params
-    })
-}
 
 export default {
     get,
-    post,
     put,
-    patch,
-    remove
 }
