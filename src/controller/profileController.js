@@ -7,7 +7,13 @@ const get = async (req, res) => {
         //if kosong > kirim data dummy
         if (!profile) {
             //buat data dummy disini
-            profile = "data dummy"
+            profile = {
+                email: 'dummyexample@.com',
+                firstName: '-',
+                lastName: '-',
+                dob: '1900-01-01',
+                address: '-'
+            }
         }
     
         //if ada > kirim data asli
