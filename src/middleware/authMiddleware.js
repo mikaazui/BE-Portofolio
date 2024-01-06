@@ -6,14 +6,10 @@ import authService from '../services/authService.js';
 export const authMiddleware = async (req, res, next) => {
   try {
 
-    console.log('enter routeBlog middleware ==========')
     //check cookie 
     const token = req.cookies.token;
-    console.log(token)
     if (!token) {
-      return res.status(401).json({
-        message: 'Unauthorized'
-      })
+      throw new Error()
     }
     ///check siapa pemilik token 
     const user = await Prisma.user.findFirst({
@@ -25,19 +21,14 @@ export const authMiddleware = async (req, res, next) => {
         email: true
       }
     });
-    console.log('==============')
-    console.log(user)
 
     if (!user) {
-      res.clearCookie('token')
-      throw new error()
+      throw new Error()
     }
 
     const email = user.email
     const newToken = authService.createToken(res, email)
     const dataUser = await authService.updateUserToken(email, newToken);
-    console.log(dataUser)
-    console.log('dataUser======================')
     //masukin data user ke request
     req.user = dataUser;
 
@@ -46,6 +37,7 @@ export const authMiddleware = async (req, res, next) => {
     //kalo ok ? next 
     next()
   } catch (error) {
+    res.clearCookie('token')
     return res.status(401).json({
       message: 'Unauthorized'
     })

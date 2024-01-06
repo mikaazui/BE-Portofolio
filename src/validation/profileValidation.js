@@ -3,10 +3,13 @@ import { isString100, isYear } from './mainValidation.js';
 
 
 const isProfile = joi.object({
-    email: isString100.email().required().trim().label('Email'),
-    firstName: isString100.trim().required().label('Degree'),
-    lastName: isString100.trim().required().label('Major'),
-    dob: isYear.label('DOB'),
+    email: isString100.email().required().lowercase().label('Email'),
+    firstName: isString100.required().label('Firstname'),
+    lastName: isString100.required().label('Lastname'),
+    dob: joi.date().less('now').label('DOB'),
+
+    
+    //unrequired
     address: isString100.trim().label('Address'),
     bio: isString100.trim().label('Bio'),
     website: isString100.trim().label('Website'),

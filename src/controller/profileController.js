@@ -1,9 +1,11 @@
 import { Prisma } from "../application/prisma.js";
+import { Validate } from "../application/validate.js";
+import { isProfile } from "../validation/profileValidation.js";
 const get = async (req, res) => {
     try {
         //cek database
         let profile = await Prisma.profile.findFirst()
-    
+
         //if kosong > kirim data dummy
         if (!profile) {
             //buat data dummy disini
@@ -15,39 +17,61 @@ const get = async (req, res) => {
                 address: '-'
             }
         }
-    
+
         //if ada > kirim data asli
         if (profile) {
             res.status(200).json({
                 message: 'berhasil ambil data profile',
                 data: profile
             })
-    
+
         }
-        
+
     } catch (error) {
         next(error)
     }
 }
 
-const put = (req, res) => {
-    res.status(200).json({
-        id: req.params.id,
-        ip: req.ip,
-        query: req.query,
-        body: req.body,
-        path: req.path,
-        params: req.params
-    })
+const put = async (req, res, next) => {
+    try {
+        //get data profile dari database. findFirst
+        const profile = await Prisma.profile.findFirst()
 
-    res.status(200).json({
-        id: req.params.id,
-        ip: req.ip,
-        query: req.query,
-        body: req.body,
-        path: req.path,
-        params: req.params
-    })
+        //collect data & validate
+        //check
+        let data = req.body;
+        //validate
+        data = Validate(isProfile, data)
+        
+        let dataProfile = {}
+        if (!profile) {
+            //jika null > create data baru
+            const dataProfile = await Prisma.profile.create({
+                data: data
+            })
+
+        }
+        if (profile) {
+            //jika ada isinya ? update data yang ada
+            //isi dari hasil update
+            dataProfile = await Prisma.profile.update({
+                where: {
+                    email: profile.email
+                },
+                data: data
+            })
+
+        }
+
+        res.status(200).json({
+            message: 'berhasil update data profile secara keseluruhan bedasarkan id',
+            data: profile
+        })
+
+
+    } catch (error) {
+        next(error)
+    }
 }
 
 
