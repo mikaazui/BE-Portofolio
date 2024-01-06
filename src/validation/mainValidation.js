@@ -5,11 +5,13 @@ const isString100 = joi.string().min(3).max(100).trim()
 const isString255 = joi.string().min(3).max(255).trim()
 const isYear = joi.number().positive()
 const isText = joi.string().min(3).trim()
+const isURL = joi.string().uri().trim()
 
 export {
     isID,
     isString100,
     isString255,
     isYear,
-    isText
+    isText,
+    isURL
 }
