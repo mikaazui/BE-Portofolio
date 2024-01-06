@@ -17,7 +17,7 @@ routerPublic.get('/educations', educationController.getAll);//get all
 routerPublic.get('/education/:id', educationController.get);//get by id
 
 //profile
-routerPublic.get(profileController.get) //get profile
+routerPublic.get('/profile', profileController.get) //get profile
 
 
 //project

@@ -1,7 +1,27 @@
-const get = (req, res) => {
-    res.status(200).json({
-        message: "berhasil dapet data profile"
-    })
+import { Prisma } from "../application/prisma.js";
+const get = async (req, res) => {
+    try {
+        //cek database
+        let profile = await Prisma.profile.findFirst()
+    
+        //if kosong > kirim data dummy
+        if (!profile) {
+            //buat data dummy disini
+            profile = "data dummy"
+        }
+    
+        //if ada > kirim data asli
+        if (profile) {
+            res.status(200).json({
+                message: 'berhasil ambil data profile',
+                data: profile
+            })
+    
+        }
+        
+    } catch (error) {
+        next(error)
+    }
 }
 
 const put = (req, res) => {
