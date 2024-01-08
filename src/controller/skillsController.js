@@ -1,3 +1,18 @@
+import { Prisma } from "@prisma/client"
+
+const getAll = (req, res) => {
+  try {
+    const data = Prisma.skills.findMany()
+    res.status(200).json({
+        message: 'berhasil masuk ke halaman skills',
+      })
+        
+    
+  } catch (error) {
+    
+  }
+  
+}
 const get = (req, res) => {
     res.status(200).json({
       message: 'berhasil masuk ke halaman skills',
@@ -35,6 +50,7 @@ const remove = (req, res) => {
 
 export default {
     get,
+    getAll,
     post,
     put,
     patch,
