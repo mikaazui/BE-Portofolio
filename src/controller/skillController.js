@@ -96,7 +96,8 @@ const put = async (req, res, next) => {
         id: id
       },
       select: {
-        id: true
+        id: true,
+        skillCategoryId: true
       }
     }
     )
@@ -104,6 +105,7 @@ const put = async (req, res, next) => {
     if (!currentSkill) {
       throw new ResponseError(404, `skill ${id} not found`)
     }
+    
     //handle category
     const category_id = await skillService.create_or_find_skill_category(skill.category)
 
@@ -111,13 +113,20 @@ const put = async (req, res, next) => {
       title: skill.title,
       skillCategoryId: category_id
     };
-    
+
     const updatedSkill = await Prisma.skill.update({
       where: {
         id: id
       },
       data: update_data
-    })
+    });
+
+    //remove category
+    //id category sebelumnya
+    console.log("====================currentSkill")
+    console.log(currentSkill)
+    const previous_skill_id = currentSkill.skillCategoryId;
+    await skillService.remove_category(previous_skill_id);
 
     res.status(200).json({
       message: `skill ${id} updated successfully`,
@@ -130,41 +139,41 @@ const put = async (req, res, next) => {
   }
 
 }
-const remove = async(req, res, next) => {
+const remove = async (req, res, next) => {
   try {
     let id = req.params.id;
 
     id = Validate(isID, id);
     const currentSkill = await Prisma.skill.findUnique({
-        where: {
-            id
-        },
-        select: {
-            id: true
-        }
+      where: {
+        id
+      },
+      select: {
+        id: true
+      }
     }
     )
 
     if (!currentSkill) {
-        throw new ResponseError(404, `skill ${id} not found`)
+      throw new ResponseError(404, `skill ${id} not found`)
     }
 
     //delete execution
 
     await Prisma.skill.delete({
-        where: {
-            id: id
-        }
+      where: {
+        id: id
+      }
     })
 
 
     res.status(200).json({
-        message: `deleted skill ${id} successfully`,
+      message: `deleted skill ${id} successfully`,
     })
 
-} catch (error) {
+  } catch (error) {
     next(error)
-}
+  }
 
 }
 
