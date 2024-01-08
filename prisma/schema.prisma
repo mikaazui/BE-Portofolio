@@ -14,7 +14,7 @@ model user {
   name      String   @db.VarChar(100)
   email     String   @id @db.VarChar(100)
   password  String   @db.VarChar(200)
-  token     String?   @db.VarChar(250)
+  token     String?  @db.VarChar(250)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -26,7 +26,7 @@ model profile {
   firstName String   @db.VarChar(100)
   lastName  String   @db.VarChar(100)
   dob       DateTime @db.Date
-  address   String?   @db.Text
+  address   String?  @db.Text
   bio       String?  @db.Text
   website   String?  @db.VarChar(100)
   instagram String?  @db.VarChar(100)
@@ -51,17 +51,17 @@ model blog {
 }
 
 model project {
-  id          Int           @id @default(autoincrement())
-  title       String        @db.VarChar(100)
+  id          Int            @id @default(autoincrement())
+  title       String         @db.VarChar(100)
   description String?        @db.Text
   status      ProjectStatus? @default(ON_PROGRESS)
-  startDate   DateTime      @default(now())
+  startDate   DateTime       @default(now())
   endDate     DateTime?      @default(now())
-  url         String?       @db.VarChar(255)
-  github      String?       @db.VarChar(255)
-  company     String?       @db.VarChar(255)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @default(now()) @updatedAt
+  url         String?        @db.VarChar(255)
+  github      String?        @db.VarChar(255)
+  company     String?        @db.VarChar(255)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @default(now()) @updatedAt
 
   @@map("project")
 }
@@ -77,7 +77,7 @@ model education {
   insituitionName String   @db.VarChar(100)
   city            String   @db.VarChar(100)
   startYear       Int      @db.Int
-  endYear         Int?      @db.Int
+  endYear         Int?     @db.Int
   major           String?  @db.VarChar(100)
   degree          String?  @db.VarChar(100)
   createdAt       DateTime @default(now())
@@ -86,17 +86,23 @@ model education {
   @@map("education")
 }
 
-model skill {
-  id             Int      @id @default(autoincrement())
-  title          String   @db.VarChar(100)
-  skill_category Int      @db.Int
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now()) @updatedAt
-}
-
-model skill_category {
+model SkillCategory {
   id        Int      @id @default(autoincrement())
   title     String   @db.VarChar(100)
+  Skill     Skill[]
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("skill_category")
+}
+
+model Skill {
+  id              Int           @id @default(autoincrement())
+  title           String        @db.VarChar(100)
+  skillCategoryId Int           @db.Int
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now()) @updatedAt
+  category        SkillCategory @relation(fields: [skillCategoryId], references: [id])
+
+  @@map("skill")
 }

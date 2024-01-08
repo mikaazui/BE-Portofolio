@@ -6,7 +6,7 @@ import { routerPublic } from "./src/router/public.js";
 import { routeProject } from "./src/router/project.js";
 import { routeEducation } from "./src/router/education.js";
 import { routeBlog } from "./src/router/blog.js";
-import { routeSkills } from "./src/router/skills.js";
+import { routeSkill } from "./src/router/skill.js";
 import { routeAuth } from "./src/router/auth.js";
 import { logging } from "./src/middleware/logging.js";
 import { routeUnknown } from "./src/middleware/unknown.js";
@@ -50,7 +50,7 @@ app.use(routeEducation);
 app.use(routeBlog);
 
 //separator start skills
-app.use(routeSkills);
+app.use(routeSkill);
 
 //middleware for unknown path and error
 app.use(routeUnknown);
