@@ -6,5 +6,4 @@ routeSkill.post('/skill', skillController.post);
 
 routeSkill.route('/skill/:id')
     .put(skillController.put)
-    .patch(skillController.patch)
     .delete(skillController.remove)

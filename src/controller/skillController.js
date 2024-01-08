@@ -3,6 +3,7 @@ import { isSkill } from "../validation/skillValidation.js"
 import { Validate } from "../application/validate.js"
 import skillService from "../services/skillService.js"
 import { isID } from "../validation/mainValidation.js"
+import { ResponseError } from "../error/responseError.js"
 
 const getAll = async (req, res, next) => {
   try {
@@ -129,23 +130,41 @@ const put = async (req, res, next) => {
   }
 
 }
-
-const patch = (req, res, next) => {
+const remove = async(req, res, next) => {
   try {
-    res.status(200).json({
-      message: 'berhasil masuk ke halaman skills',
+    let id = req.params.id;
+
+    id = Validate(isID, id);
+    const currentSkill = await Prisma.skill.findUnique({
+        where: {
+            id
+        },
+        select: {
+            id: true
+        }
+    }
+    )
+
+    if (!currentSkill) {
+        throw new ResponseError(404, `skill ${id} not found`)
+    }
+
+    //delete execution
+
+    await Prisma.skill.delete({
+        where: {
+            id: id
+        }
     })
 
-  } catch (error) {
+
+    res.status(200).json({
+        message: `deleted skill ${id} successfully`,
+    })
+
+} catch (error) {
     next(error)
-  }
-
 }
-
-const remove = (req, res, next) => {
-  res.status(200).json({
-    message: 'berhasil masuk ke halaman skills',
-  })
 
 }
 
@@ -154,6 +173,5 @@ export default {
   getAll,
   post,
   put,
-  patch,
   remove
 }
