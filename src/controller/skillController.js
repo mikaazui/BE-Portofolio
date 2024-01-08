@@ -28,7 +28,7 @@ const get = async (req, res, next) => {
   try {
     let id = req.params.id
     id = Validate(isID, id)
-  
+
     const skill = await Prisma.skill.findUnique({
       where: {
         id
@@ -37,22 +37,22 @@ const get = async (req, res, next) => {
         category: true
       }
     })
-  
+
     //handle not found
     if (skill == null) {
       throw new ResponseError(404, `blog ${id} not found`)
     }
-  
+
     res.status(200).json({
       message: 'berhasil masuk ke halaman skill (berdasakan id)',
       id: id,
       data: skill
-  
+
     });
   } catch (error) {
-    
+
   }
- 
+
 }
 
 const post = async (req, res, next) => {
@@ -82,10 +82,46 @@ const post = async (req, res, next) => {
 
 }
 
-const put = (req, res, next) => {
+const put = async (req, res, next) => {
   try {
+    let skill = req.body;
+    let id = req.params.id;
+    //start validate skill
+    skill = Validate(isSkill, skill)
+    id = Validate(isID, id)
+
+    const currentSkill = await Prisma.skill.findUnique({
+      where: {
+        id: id
+      },
+      select: {
+        id: true
+      }
+    }
+    )
+    // handle not found
+    if (!currentSkill) {
+      throw new ResponseError(404, `skill ${id} not found`)
+    }
+    //handle category
+    const category_id = await skillService.create_or_find_skill_category(skill.category)
+
+    const update_data = {
+      title: skill.title,
+      skillCategoryId: category_id
+    };
+    
+    const updatedSkill = await Prisma.skill.update({
+      where: {
+        id: id
+      },
+      data: update_data
+    })
+
     res.status(200).json({
-      message: 'berhasil masuk ke halaman skills',
+      message: `skill ${id} updated successfully`,
+      id: id,
+      updatedData: updatedSkill
     })
 
   } catch (error) {
