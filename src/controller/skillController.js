@@ -105,7 +105,7 @@ const put = async (req, res, next) => {
     if (!currentSkill) {
       throw new ResponseError(404, `skill ${id} not found`)
     }
-    
+
     //handle category
     const category_id = await skillService.create_or_find_skill_category(skill.category)
 
@@ -149,7 +149,8 @@ const remove = async (req, res, next) => {
         id
       },
       select: {
-        id: true
+        id: true,
+        skillCategoryId: true
       }
     }
     )
@@ -164,7 +165,14 @@ const remove = async (req, res, next) => {
       where: {
         id: id
       }
-    })
+    });
+     //remove category
+    //id category sebelumnya
+    console.log("====================currentSkill")
+    console.log(currentSkill)
+    const previous_skill_id = currentSkill.skillCategoryId;
+    await skillService.remove_category(previous_skill_id);
+
 
 
     res.status(200).json({
