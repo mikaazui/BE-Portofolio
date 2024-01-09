@@ -12,7 +12,7 @@ const getAll = async (req, res, next) => {
             message: 'berhasil masuk ke halaman project',
             data: project
         })
-        
+
     } catch (error) {
         next()
     }
@@ -24,19 +24,16 @@ const get = async (req, res, next) => {
         id = Validate(isID, id)
 
         const project = await Prisma.project.findUnique({
-            where: {
-                id
-            }
-        })
+            where: { id }
+        });
 
         //handle not found
-        if (project == null) {
-            throw new ResponseError(404, `project ${id} not found`)
-        }
+        if (project == null) throw new ResponseError(404, `project ${id} not found`)
+
         res.status(200).json({
-            message:  `berhasil mendapatkan project ${id}`,
-        })
-        
+            message: `berhasil mendapatkan project ${id}`,
+        });
+
     } catch (error) {
         next(error)
     }
@@ -56,14 +53,14 @@ const post = async (req, res, next) => {
             message: 'berhasil masuk ke halaman project',
             data: newProject
         })
-        
+
     } catch (error) {
         next(error)
     }
 
 }
 
-const put =  async (req, res, next) => {
+const put = async (req, res, next) => {
     try {
         let project = req.body;
         let id = req.params.id;
@@ -72,30 +69,22 @@ const put =  async (req, res, next) => {
         id = Validate(isID, id)
 
         const currentProject = await Prisma.project.findUnique({
-            where: {
-                id: id
-            },
-            select: {
-                id: true
-            }
+            where: { id: id },
+            select: { id: true }
         }
-        )
+        );
 
-        if (!currentProject) {
-            throw new ResponseError(404, `project ${id} not found`)
-        }
+        if (!currentProject) throw new ResponseError(404, `project ${id} not found`);
 
         const updatedData = await Prisma.project.update({
-            where: {
-                id: id
-            },
+            where: { id: id },
             data: project
-        })
+        });
         res.status(200).json({
             message: `berhasil mengupdate project ${id}`,
             data: updatedData
-        })
-        
+        });
+
     } catch (error) {
         next(error)
     }
@@ -108,30 +97,20 @@ const remove = async (req, res, next) => {
 
         id = Validate(isID, id);
         const currentProject = await Prisma.project.findUnique({
-            where: {
-                id
-            },
-            select: {
-                id: true
-            }
-        }
-        )
+            where: { id }, 
+            select: { id: true }
+        });
 
-        if (!currentProject) {
-            throw new ResponseError(404, `project ${id} not found`)
-        }
-
+        if (!currentProject) throw new ResponseError(404, `project ${id} not found`)
         //delete execution
 
         await Prisma.project.delete({
-            where: {
-                id: id
-            }
-        })
+            where: { id: id }
+        });
         res.status(200).json({
             message: `berhasil menghapus project ${id}`,
-        })
-        
+        });
+
     } catch (error) {
         next(error)
     }

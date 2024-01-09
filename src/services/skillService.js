@@ -8,7 +8,7 @@ const create_or_find_skill_category = async (title) => {
   //find categoty
   const category = await Prisma.skillCategory.findFirst({
     where: {
-      title: title
+      title
     }
   });
 
@@ -18,7 +18,7 @@ const create_or_find_skill_category = async (title) => {
 
   const newCategory = await Prisma.skillCategory.create({
     data: {
-      title: title
+      title
     }
   });
 

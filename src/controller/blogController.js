@@ -8,12 +8,11 @@ import { isID } from '../validation/mainValidation.js'
 
 
 const getAll = async (req, res) => {
-
     const blog = await Prisma.blog.findMany()
 
     res.status(200).json({
         message: 'berhasil masuk ke halaman blog (semua data)',
-        blog: blog
+        blog
     })
 
 }
@@ -23,25 +22,17 @@ const get = async (req, res, next) => {
         let id = req.params.id
         id = Validate(isID, id)
 
-        const blog = await Prisma.blog.findUnique({
-            where: {
-                id
-            }
-        })
-
+        const blog = await Prisma.blog.findUnique({ where: { id } });
         //handle not found
-        if (blog == null) {
-            throw new ResponseError(404, `blog ${id} not found`)
-        }
+        if (blog == null) throw new ResponseError(404, `blog ${id} not found`)
 
         res.status(200).json({
             message: 'berhasil masuk ke halaman blogs (berdasakan id)',
-            id: id,
-            data: blog
+            id,
+            blog
 
         });
     } catch (error) {
-
         next(error)
     }
 }
@@ -52,13 +43,11 @@ const post = async (req, res, next) => {
         let blog = req.body;
         blog = Validate(isBlog, blog)
 
-        const newBlog = await Prisma.blog.create({
-            data: blog
-        });
+        const data = await Prisma.blog.create({ data: blog });
 
         res.status(200).json({
             message: 'saved to data blog',
-            data: newBlog
+            data
         })
 
     } catch (error) {
@@ -75,30 +64,20 @@ const put = async (req, res, next) => {
         id = Validate(isID, id)
 
         const currentBlog = await Prisma.blog.findUnique({
-            where: {
-                id: id
-            },
-            select: {
-                id: true
-            }
-        }
-        )
+            where: { id }, select: { id: true }
+        })
 
-        if (!currentBlog) {
-            throw new ResponseError(404, `blog ${id} not found`)
-        }
+        if (!currentBlog) throw new ResponseError(404, `blog ${id} not found`)
 
-        const updatedData = await Prisma.blog.update({
-            where: {
-                id: id
-            },
+        const data = await Prisma.blog.update({
+            where: { id },
             data: blog
         })
 
         res.status(200).json({
             message: `Blog ${id} updated successfully`,
-            id: id,
-            updatedData: updatedData
+            id,
+            data
         })
     } catch (error) {
         next(error)
@@ -113,30 +92,22 @@ const updateBlogTitle = async (req, res, next) => {
         title = Validate(isBlogTitle, title);
 
         const currentBlog = await Prisma.blog.findUnique({
-            where: {
-                id: id
-            },
-            select: {
-                id: true
-            }
-        }
-        )
+            where: { id },
+            select: { id: true }
+        })
 
-        if (!currentBlog) {
-            throw new ResponseError(404, `blog ${id} not found`)
-        }
+        if (!currentBlog) throw new ResponseError(404, `blog ${id} not found`)
+
         //execution (patch)
 
-        const updatedTitle = await Prisma.blog.update({
-            where: {
-                id: id
-            },
-            title: title
+        const data = await Prisma.blog.update({
+            where: { id },
+            title
         })
 
         res.status(200).json({
             message: `blog ${id} updated (title) successfully`,
-            data: updatedTitle
+            data
         });
 
     } catch (error) {
@@ -152,31 +123,17 @@ const remove = async (req, res, next) => {
 
         id = Validate(isID, id);
         const currentBlog = await Prisma.blog.findUnique({
-            where: {
-                id
-            },
-            select: {
-                id: true
-            }
-        }
-        )
-
-        if (!currentBlog) {
-            throw new ResponseError(404, `blog ${id} not found`)
-        }
+            where: { id },
+            select: { id: true }
+        })
+        if (!currentBlog) throw new ResponseError(404, `blog ${id} not found`)
 
         //delete execution
-
-        await Prisma.blog.delete({
-            where: {
-                id: id
-            }
-        })
-
+        await Prisma.blog.delete({ where: { id } })
 
         res.status(200).json({
             message: 'deleted blog successfully',
-            id: id
+            id
         })
 
     } catch (error) {

@@ -8,16 +8,13 @@ import { ResponseError } from "../error/responseError.js"
 const getAll = async (req, res, next) => {
   try {
     const data = await Prisma.skill.findMany({
-      include: {
-        category: true
-      }
-    })
-    console.log(data)
+      include: { category: true }
+    });
+
     res.status(200).json({
       message: 'berhasil masuk ke halaman skills',
-      data: data
-    })
-
+      data
+    });
 
   } catch (error) {
     next(error)
@@ -30,31 +27,24 @@ const get = async (req, res, next) => {
     let id = req.params.id
     id = Validate(isID, id)
 
-    const skill = await Prisma.skill.findUnique({
-      where: {
-        id
-      },
-      include: {
-        category: true
-      }
-    })
+    const data = await Prisma.skill.findUnique({
+      where: { id },
+      include: { category: true }
+    });
 
     //handle not found
-    if (skill == null) {
-      throw new ResponseError(404, `blog ${id} not found`)
-    }
+    if (data == null) throw new ResponseError(404, `blog ${id} not found`);
+
 
     res.status(200).json({
       message: 'berhasil masuk ke halaman skill (berdasakan id)',
-      id: id,
-      data: skill
+      id, data
 
     });
   } catch (error) {
-
+    next(error)
   }
-
-}
+};
 
 const post = async (req, res, next) => {
   try {
@@ -62,7 +52,7 @@ const post = async (req, res, next) => {
     data = Validate(isSkill, data)
 
     // const category_id = await create_or_find_skill_category(data.category)
-    const category_id = await skillService.create_or_find_skill_category(data.category)
+    const category_id = await skillService.create_or_find_skill_category(data.category);
 
     const insert_data = {
       title: data.title,
@@ -76,12 +66,10 @@ const post = async (req, res, next) => {
       data: skill_data
     })
 
-
   } catch (error) {
     next(error)
   }
-
-}
+};
 
 const put = async (req, res, next) => {
   try {
@@ -92,47 +80,40 @@ const put = async (req, res, next) => {
     id = Validate(isID, id)
 
     const currentSkill = await Prisma.skill.findUnique({
-      where: {
-        id: id
-      },
+      where: { id },
       select: {
         id: true,
         skillCategoryId: true
       }
-    }
-    )
+    });
+
     // handle not found
-    if (!currentSkill) {
-      throw new ResponseError(404, `skill ${id} not found`)
-    }
+    if (!currentSkill) throw new ResponseError(404, `skill ${id} not found`);
+
 
     //handle category
-    const category_id = await skillService.create_or_find_skill_category(skill.category)
+    const category_id = await skillService.create_or_find_skill_category(skill.category);
 
-    const update_data = {
+    const data = {
       title: skill.title,
       skillCategoryId: category_id
     };
 
     const updatedSkill = await Prisma.skill.update({
-      where: {
-        id: id
-      },
-      data: update_data
+      where: { id },
+      data
     });
 
     //remove category
     //id category sebelumnya
-    console.log("====================currentSkill")
-    console.log(currentSkill)
     const previous_skill_id = currentSkill.skillCategoryId;
     await skillService.remove_category(previous_skill_id);
 
     res.status(200).json({
       message: `skill ${id} updated successfully`,
-      id: id,
-      updatedData: updatedSkill
-    })
+      id,
+      updatedSkill
+    });
 
   } catch (error) {
     next(error)
@@ -145,45 +126,35 @@ const remove = async (req, res, next) => {
 
     id = Validate(isID, id);
     const currentSkill = await Prisma.skill.findUnique({
-      where: {
-        id
-      },
+      where: { id },
       select: {
         id: true,
         skillCategoryId: true
       }
     }
-    )
+    );
 
-    if (!currentSkill) {
-      throw new ResponseError(404, `skill ${id} not found`)
-    }
+    if (!currentSkill) throw new ResponseError(404, `skill ${id} not found`)
+    
 
     //delete execution
 
     await Prisma.skill.delete({
-      where: {
-        id: id
-      }
+      where: { id }
     });
-     //remove category
+    //remove category
     //id category sebelumnya
-    console.log("====================currentSkill")
-    console.log(currentSkill)
     const previous_skill_id = currentSkill.skillCategoryId;
     await skillService.remove_category(previous_skill_id);
 
-
-
     res.status(200).json({
       message: `deleted skill ${id} successfully`,
-    })
+    });
 
   } catch (error) {
     next(error)
-  }
-
-}
+  };
+};
 
 export default {
   get,
