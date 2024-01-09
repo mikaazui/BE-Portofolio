@@ -3,14 +3,14 @@ import dotenv from 'dotenv'
 import { Prisma } from '../application/prisma.js'
 dotenv.config()
 
-const createToken = (res, email, age) => {
+const createToken = (res, email, age = process.env.JWT_SECRET) => {
     //create TOKEN
     const jwtSecretToken = process.env.JWT_SECRET
     // const maxAge = process.env.SESSION_AGE
-    const maxAge = age ? age : process.env.SESSION_AGE
-    var token = jwt.sign({ email: email }, jwtSecretToken, {
-        expiresIn: maxAge
-    });
+    var token = jwt.sign({ email: email },
+        jwtSecretToken,
+        { expiresIn: age }
+    );
     res.cookie("token", token)
     return token
 

@@ -8,17 +8,13 @@ import authService from "../services/authService.js";
 
 const login = async (req, res, next) => {
   try {
-    console.log("masuk proses login");
     //ambil data > email && password
     let loginData = req.body;
-    console.log(loginData);
-    loginData = Validate(loginValidate, loginData);
+    const { email, password } = Validate(loginValidate, loginData);
 
     //check email (in databse or not)
     const user = await Prisma.user.findUnique({
-      where: {
-        email: loginData.email,
-      },
+      where: { email },
     });
     //check email
     if (!user) {
@@ -26,14 +22,12 @@ const login = async (req, res, next) => {
     }
 
     //check password/compare password
-    const clientPass = loginData.password;
     const dbPass = user.password;
-    const checkPass = await bcrypt.compare(clientPass, dbPass);
+    const checkPass = await bcrypt.compare(password, dbPass);
 
     if (!checkPass) throw new ResponseError(400, "Email or Password is Invalid");
 
     //create token
-    const email = user.email;
     const token = authService.createToken(res, email);
 
     //update token
