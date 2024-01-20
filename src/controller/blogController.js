@@ -4,9 +4,6 @@ import { ResponseError } from '../error/responseError.js'
 import { isBlog, isBlogTitle } from '../validation/blogValidation.js'
 import { isID } from '../validation/mainValidation.js'
 
-
-
-
 const getAll = async (req, res) => {
     const blog = await Prisma.blog.findMany()
 

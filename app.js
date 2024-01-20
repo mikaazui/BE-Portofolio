@@ -12,6 +12,7 @@ import { logging } from "./src/middleware/logging.js";
 import { routeUnknown } from "./src/middleware/unknown.js";
 import { errorMid } from "./src/middleware/errorMid.js";
 import { authMiddleware } from "./src/middleware/authMiddleware.js";
+import { routeExperience } from "./src/router/experience.js";
 //deklaraai penggunaan apk express
 const app = express();
 dotenv.config();
@@ -51,6 +52,9 @@ app.use(routeBlog);
 
 //separator start skills
 app.use(routeSkill);
+//separator start experience
+app.use(routeExperience);
+
 
 //middleware for unknown path and error
 app.use(routeUnknown);
