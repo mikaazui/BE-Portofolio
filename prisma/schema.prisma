@@ -111,7 +111,6 @@ model Skill {
 
   @@map("skill")
 }
-
 model experience {
   id          Int       @id @default(autoincrement())
   company     String    @db.VarChar(100)
@@ -125,3 +124,4 @@ model experience {
 
   @@map("experience")
 }
+
