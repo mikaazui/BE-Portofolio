@@ -48,12 +48,12 @@ const logout = async (req, res, next) => {
     //UPDATE DATA USER
     const user = req.user;
     await Prisma.user.update({
-      where: { email },
+      where: { email: user.email },
       data: { token: null },
       select: { email: true },
     });
     //bikin token umur 1 detik
-    authService.createToken(res, email, "1s");
+    authService.createToken(res, user.email, "1s");
 
     //reset cookies
     res.clearCookie("token");

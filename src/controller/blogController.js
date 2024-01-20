@@ -106,10 +106,10 @@ const updateBlogTitle = async (req, res, next) => {
         })
 
         res.status(200).json({
-            message: `blog ${id} updated (title) successfully`,
+            message: `Blog ${id} updated successfully`,
+            id,
             data
         });
-
     } catch (error) {
         next(error)
 
@@ -149,5 +149,4 @@ export default {
     put,
     updateBlogTitle,
     remove
-
 }

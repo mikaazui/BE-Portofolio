@@ -12,7 +12,7 @@ const isProfile = joi.object({
     country:isString100.label('country') ,  
     job:isString100.label('job') ,      
     phone: isString25.label('phone'),   
-    address: isText.trim().label('Address'),
+    address: isText.trim().label('address'),
     bio: isText,
     website: isURL,
     instagram: isURL,
