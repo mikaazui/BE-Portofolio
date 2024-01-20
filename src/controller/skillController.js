@@ -56,6 +56,7 @@ const post = async (req, res, next) => {
 
     const insert_data = {
       title: data.title,
+      svg: data.svg,
       skillCategoryId: category_id
     };
     const skill_data = await Prisma.skill.create({

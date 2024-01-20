@@ -5,8 +5,8 @@ import { isString100, isString255, isText, isURL } from './mainValidation.js';
 export const isProject = joi.object({
     title: isString255.required(),
     description: isText,
-    startDate: joi.date().less('now').required(),
-    endDate: joi.date().less('now'),
+    startDate: joi.date().max('now').required(),
+    endDate: joi.date().min(joi.ref('startDate')).less('now'),
     status: joi.string().valid('ON_PROGRESS', 'MAINTENANCE', ' COMPLETED'),
     url: isURL,
     gitHub: isURL,
