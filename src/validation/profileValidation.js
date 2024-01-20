@@ -1,5 +1,5 @@
 import joi from 'joi';
-import { isString100, isText, isYear, isURL } from './mainValidation.js';
+import { isString100, isText, isURL, isString25 } from './mainValidation.js';
 
 
 const isProfile = joi.object({
@@ -7,9 +7,11 @@ const isProfile = joi.object({
     firstName: isString100.required().label('Firstname'),
     lastName: isString100.required().label('Lastname'),
     dob: joi.date().less('now').label('DOB'),
-
-    
     //unrequired
+    city: isString100.label('city') ,     
+    country:isString100.label('country') ,  
+    job:isString100.label('job') ,      
+    phone: isString25.label('phone'),   
     address: isText.trim().label('Address'),
     bio: isText,
     website: isURL,

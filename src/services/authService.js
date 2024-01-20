@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 import { Prisma } from '../application/prisma.js'
 dotenv.config()
 
-const createToken = (res, email, age = process.env.JWT_SECRET) => {
+const createToken = (res, email, age = process.env.SESSION_AGE) => {
     //create TOKEN
     const jwtSecretToken = process.env.JWT_SECRET
     // const maxAge = process.env.SESSION_AGE

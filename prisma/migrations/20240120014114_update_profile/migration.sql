@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE `profile` 
+    ADD COLUMN `city` VARCHAR(100) NULL,
+    ADD COLUMN `country` VARCHAR(100) NULL,
+    ADD COLUMN `job` VARCHAR(100) NULL,
+    ADD COLUMN `phone` VARCHAR(25) NULL;
