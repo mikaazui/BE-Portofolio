@@ -1,6 +1,7 @@
 import express from "express";
 import educationController from "../controller/educationController.js";
 export const routeEducation = express.Router();
+// FIXME jgn terlalu banyak baris kosong
 
 
 
