@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import experienceController from "../controller/experienceController.js";
 export const routeExperience = express.Router();
 
+// TODO buang klo ga diperlukan
 // routeExperience.route('/blog')
 //     .get(blogController.get)
 //     .post(blogController.post)
