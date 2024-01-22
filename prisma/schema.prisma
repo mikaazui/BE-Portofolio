@@ -117,8 +117,7 @@ model experience {
   company     String    @db.VarChar(100)
   location    String?   @db.VarChar(100)
   title       String    @db.VarChar(100)
-  // yang ini loh (bawah ini)
-  description String?   @db.VarChar(100)
+  description String?   @db.Text
   startDate   DateTime  @default(now())
   endDate     DateTime? @default(now())
   createdAt   DateTime  @default(now())
@@ -126,5 +125,3 @@ model experience {
 
   @@map("experience")
 }
-
-//ntar tolong ubah descriptionnya ke text ya (dari prismanya)
