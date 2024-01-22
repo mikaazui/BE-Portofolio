@@ -6,7 +6,7 @@ const isEducation = joi.object({
     insituitionName: isString100.required().trim().label('Institution Name'),
     degree: isString100.trim().label('Degree'),
     major: isString100.trim().label('Major'),
-    city: isString100.trim().label('city'),
+    city: isString100.trim().label('City'),
     startYear: isYear.label('Start Date'),
     endYear: isYear.label('End Date')
 })
