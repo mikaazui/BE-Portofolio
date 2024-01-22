@@ -2,6 +2,7 @@ import joi from 'joi';
 import { isString100, isString255, isText, isURL } from './mainValidation.js';
 // import { isString100, isYear } from './mainValidation.js';
 
+// TODO tambahkan label jika di perlukan
 export const isProject = joi.object({
     title: isString255.required(),
     description: isText,
