@@ -1,15 +1,13 @@
 import joi from 'joi';
 import { isString100, isString255, isText, isURL } from './mainValidation.js';
-// import { isString100, isYear } from './mainValidation.js';
 
-// TODO tambahkan label jika di perlukan
 export const isProject = joi.object({
-    title: isString255.required(),
-    description: isText,
-    startDate: joi.date().max('now').required(),
-    endDate: joi.date().min(joi.ref('startDate')).less('now'),
-    status: joi.string().valid('ON_PROGRESS', 'MAINTENANCE', ' COMPLETED'),
-    url: isURL,
-    gitHub: isURL,
-    company: isString100
+    title: isString255.required().label('Title'),
+    description: isText.label('Description'),
+    startDate: joi.date().max('now').required().label('Start Date'),
+    endDate: joi.date().min(joi.ref('startDate')).less('now').label('End Date'),
+    status: joi.string().valid('ON_PROGRESS', 'MAINTENANCE', ' COMPLETED').label('Status'),
+    url: isURL.label('URL'),
+    gitHub: isURL.label('GitHub'),
+    company: isString100.label('Company'),
 })
