@@ -1,6 +1,8 @@
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
+import fileService from "../services/fileService.js";
 import { isProfile } from "../validation/profileValidation.js";
+import fs from 'fs/promises';
 const get = async (req, res) => {
     try {
         //cek database
@@ -70,6 +72,10 @@ const put = async (req, res, next) => {
                 },
                 data
             });
+            //hapus poto lama
+            if (profile.avatar) {
+                await fileService.removeFile(profile.avatar);
+            }
 
         }
 
@@ -80,6 +86,13 @@ const put = async (req, res, next) => {
 
 
     } catch (error) {
+        //jika error dan ada file > hapus file
+        if (req.file) {
+            //handle buang file
+            fileService.removeFile(req.file.path)
+
+        }
+
         next(error)
     }
 
