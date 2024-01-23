@@ -40,6 +40,16 @@ const put = async (req, res, next) => {
         //collect data & validate
         //check
         let data = req.body;
+
+        //add avatar
+        if (req.file) {
+            const avatar = '/' + req.file.path.replaceAll('\\', '/');
+            data.avatar = avatar;
+        }
+        data = Validate(isProfile, data);
+        console.log('data telah di validasi')
+        console.log(data)
+
         //validate
         data = Validate(isProfile, data);
 
@@ -72,6 +82,7 @@ const put = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
+
 };
 
 
