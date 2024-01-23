@@ -13,6 +13,7 @@ import { routeUnknown } from "./src/middleware/unknown.js";
 import { errorMid } from "./src/middleware/errorMid.js";
 import { authMiddleware } from "./src/middleware/authMiddleware.js";
 import { routeExperience } from "./src/router/experience.js";
+import fileService from "./src/services/fileService.js";
 //deklaraai penggunaan apk express
 const app = express();
 dotenv.config();
@@ -25,6 +26,8 @@ app.use(cookieParser());
 //middleware untuk collect data dari client
 app.use(logging);
 
+//create folder upload
+
 //taruh paling atas
 //public api
 app.use(routerPublic)
@@ -34,7 +37,7 @@ app.use(authMiddleware)
 
 
 // router dibawah akan dicek authnya
-
+fileService.createFolder('./uploads');
 //separator start Auth
 app.use(routeAuth);
 
