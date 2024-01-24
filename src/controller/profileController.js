@@ -98,9 +98,23 @@ const put = async (req, res, next) => {
 
 };
 
+const portofolio = async (req, res, next) => {
+    try {
+        res.status(200).json({
+            message: 'berhasil ambil data portofolio',
+        })
+
+    } catch (error) {
+        next(error)
+    }
+
+}
+
 
 
 export default {
     get,
     put,
+    portofolio
+
 }
