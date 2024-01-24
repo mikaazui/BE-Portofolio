@@ -2,6 +2,7 @@ import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import fileService from "../services/fileService.js";
 import { isProfile } from "../validation/profileValidation.js";
+import projectController from "./projectController.js";
 import fs from 'fs/promises';
 const get = async (req, res) => {
     try {
@@ -92,6 +93,8 @@ const portofolio = async (req, res, next) => {
         //ambil data profile
         const profile = await getProfile()
         //ambil data project // 4 data saja
+        const { data: project } = await projectController.getByPage(2, 0)
+        //menghasilkan variable project
         
         //ambil data experience
 
@@ -105,7 +108,8 @@ const portofolio = async (req, res, next) => {
         res.status(200).json({
             message: 'berhasil ambil data portofolio',
             data: {
-                profile: profile,
+                profile,
+                project: project
             }
         })
 
