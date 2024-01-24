@@ -91,8 +91,8 @@ const portofolio = async (req, res, next) => {
     try {
         //ambil data profile
         const profile = await getProfile()
-        //ambil data project
-
+        //ambil data project // 4 data saja
+        
         //ambil data experience
 
         //ambil data education
