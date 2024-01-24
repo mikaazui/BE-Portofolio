@@ -35,7 +35,7 @@ const getAll = async (req, res, next) => {
     }
 }
 
-    const getByPage = async (limit, skip = 0) => {
+    const getByPage = async (limit, skip) => {
         const data = await Prisma.project.findMany({
             take: limit,
             skip
