@@ -8,20 +8,6 @@ const get = async (req, res) => {
         //cek database
         let profile = await Prisma.profile.findFirst();
 
-        //if kosong > kirim data dummy
-        if (!profile) {
-            //buat data dummy disini
-            profile = {
-                email: 'dummyexample@.com',
-                firstName: '-',
-                lastName: '-',
-                dob: '1900-01-01',
-                job: '-',
-                address: '-',
-                country: '-',
-                city: '-'
-            }
-        };
 
         //if ada > kirim data asli
         if (profile) {
@@ -103,8 +89,24 @@ const put = async (req, res, next) => {
 
 const portofolio = async (req, res, next) => {
     try {
+        //ambil data profile
+        const profile = await getProfile()
+        //ambil data project
+
+        //ambil data experience
+
+        //ambil data education
+
+        //ambil data blog
+
+        //ambil data skill by category
+
+
         res.status(200).json({
             message: 'berhasil ambil data portofolio',
+            data: {
+                profile: profile,
+            }
         })
 
     } catch (error) {
@@ -112,6 +114,34 @@ const portofolio = async (req, res, next) => {
     }
 
 }
+
+const getProfile = async (req, res, next) => {
+    try {
+        //cek database
+        let profile = await Prisma.profile.findFirst();
+
+        //if kosong > kirim data dummy
+        if (!profile) {
+            //buat data dummy disini
+            profile = {
+                email: 'dummyexample@.com',
+                firstName: '-',
+                lastName: '-',
+                dob: '1900-01-01',
+                job: '-',
+                address: '-',
+                country: '-',
+                city: '-'
+            }
+        };
+
+        return profile;
+
+    } catch (error) {
+        next(error)
+    }
+
+};
 
 
 
