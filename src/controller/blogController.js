@@ -5,14 +5,44 @@ import { isBlog, isBlogTitle } from '../validation/blogValidation.js'
 import { isID } from '../validation/mainValidation.js'
 
 const getAll = async (req, res) => {
-    const blog = await Prisma.blog.findMany()
+    {
+        //page
+        const page = parseInt(req.query.page) || 1
+        //limit
+        const limit = parseInt(req.query.limit) || 10
+        //skip
+        const skip = (page - 1) * limit;
 
-    res.status(200).json({
-        message: 'berhasil masuk ke halaman blog (semua data)',
-        blog
-    })
+        const { data, total } = await getByPage(limit, skip)
 
-}
+        const maxPage = Math.ceil(total / limit);
+
+        res.status(200).json({
+            message: 'berhasil masuk ke halaman blog (semua data)',
+            data: data,
+            page,
+            maxPage,
+            total
+        })
+
+    }
+};
+
+const getByPage = async (limit, skip = 0) => {
+    const data = await Prisma.blog.findMany({
+        take: limit,
+        skip
+    });
+
+    //get total data
+    const total = await Prisma.blog.count()
+    return {
+        data,
+        total
+    }
+};
+
+
 
 const get = async (req, res, next) => {
     try {
@@ -142,6 +172,7 @@ const remove = async (req, res, next) => {
 export default {
     get,
     getAll,
+    getByPage,
     post,
     put,
     updateBlogTitle,

@@ -3,6 +3,7 @@ import { Validate } from "../application/validate.js";
 import fileService from "../services/fileService.js";
 import { isProfile } from "../validation/profileValidation.js";
 import projectController from "./projectController.js";
+import blogController from "./blogController.js";
 import fs from 'fs/promises';
 const get = async (req, res) => {
     try {
@@ -102,6 +103,7 @@ const portofolio = async (req, res, next) => {
         //ambil data education
 
         //ambil data blog
+        const { data: blogs } = await blogController.getByPage(2, 0)
 
         //ambil data skill by category
 
@@ -110,7 +112,8 @@ const portofolio = async (req, res, next) => {
             message: 'berhasil ambil data portofolio',
             data: {
                 profile,
-                projects
+                projects,
+                blogs
             }
         })
 
