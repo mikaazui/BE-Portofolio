@@ -6,11 +6,29 @@ import { isProject } from "../validation/projectValidation.js"
 
 const getAll = async (req, res, next) => {
     try {
-        const project = await Prisma.project.findMany()
+        //page
+        const page = parseInt(req.query.page) || 1
+        
+        //limit
+        const limit = parseInt(req.query.limit) || 10
+        
+        const skip = (page - 1) * limit;
 
+        const data = await Prisma.project.findMany({
+            take: limit,
+            skip
+        })
+        
+        //get total data
+        const total = await Prisma.project.count()
+        const maxPage = Math.ceil(total / limit);
+        
         res.status(200).json({
             message: 'berhasil masuk ke halaman project',
-            data: project
+            data,
+            page,
+            total,
+            maxPage
         })
 
     } catch (error) {
