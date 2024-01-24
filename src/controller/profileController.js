@@ -93,9 +93,10 @@ const portofolio = async (req, res, next) => {
         //ambil data profile
         const profile = await getProfile()
         //ambil data project // 4 data saja
-        const { data: project } = await projectController.getByPage(2, 0)
+        //extract variable data > varoiable project
+        const { data: projects } = await projectController.getByPage(2, 0)
         //menghasilkan variable project
-        
+
         //ambil data experience
 
         //ambil data education
@@ -109,7 +110,7 @@ const portofolio = async (req, res, next) => {
             message: 'berhasil ambil data portofolio',
             data: {
                 profile,
-                project: project
+                projects
             }
         })
 
