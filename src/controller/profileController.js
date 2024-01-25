@@ -95,7 +95,7 @@ const portofolio = async (req, res, next) => {
         const profile = await getProfile()
         //ambil data project // 4 data saja
         //extract variable data > varoiable project
-        const { data: projects } = await projectController.getByPage(2, 0)
+        const { data: projects } = await projectController.getByPage(1, 4)
         //menghasilkan variable project
 
         //ambil data experience
@@ -103,7 +103,7 @@ const portofolio = async (req, res, next) => {
         //ambil data education
 
         //ambil data blog
-        const { data: blogs } = await blogController.getByPage(2, 0)
+        const { data: blogs } = await blogController.getByPage(1, 4)
 
         //ambil data skill by category
 
