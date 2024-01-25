@@ -5,15 +5,22 @@ import { isEducation } from "../validation/educationvalidation.js";
 import { isID } from "../validation/mainValidation.js";
 
 const getAll = async (req, res) => {
-    const education = await Prisma.education.findMany();
-    if (education) {
+   const data = await getEducations()
+    if (data) {
 
         res.status(200).json({
             message: 'berhasil masuk ke halaman education (semua data)',
-            education: education
+            data
         });
 
     }
+};
+
+const getEducations = async (req, res, next) => {
+        return await Prisma.education.findMany({
+            orderBy: {'startYear' : 'desc'}
+        });
+       
 };
 
 const get = async (req, res, next) => {
@@ -116,6 +123,7 @@ const remove = async (req, res, next) => {
 
 export default {
     getAll,
+    getEducations,
     get,
     post,
     put,

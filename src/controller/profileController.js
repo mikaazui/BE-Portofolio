@@ -5,6 +5,7 @@ import { isProfile } from "../validation/profileValidation.js";
 import projectController from "./projectController.js";
 import blogController from "./blogController.js";
 import fs from 'fs/promises';
+import educationController from "./educationController.js";
 const get = async (req, res) => {
     try {
         //cek database
@@ -101,6 +102,7 @@ const portofolio = async (req, res, next) => {
         //ambil data experience
 
         //ambil data education
+        const {data: educations} = await educationController.getEducations()
 
         //ambil data blog
         const { data: blogs } = await blogController.getByPage(1, 4)
@@ -113,6 +115,7 @@ const portofolio = async (req, res, next) => {
             data: {
                 profile,
                 projects,
+                educations,
                 blogs
             }
         })
