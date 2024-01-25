@@ -96,7 +96,7 @@ const portofolio = async (req, res, next) => {
     try {
         //ambil data profile
         const profile = await getProfile()
-        //extract variable data > varoiable project
+        //extract variable data > variable project
         //menghasilkan variable project
 
         //ambil data experience

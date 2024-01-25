@@ -30,7 +30,9 @@ app.use(logging);
 //create folder upload
 fileService.createFolder('./uploads');
 //create handle cors
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
 //taruh paling atas
 //public api
 app.use(routerPublic);
