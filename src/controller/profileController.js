@@ -6,6 +6,8 @@ import projectController from "./projectController.js";
 import blogController from "./blogController.js";
 import fs from 'fs/promises';
 import educationController from "./educationController.js";
+import experienceController from "./experienceController.js";
+import skillController from "./skillController.js";
 const get = async (req, res) => {
     try {
         //cek database
@@ -100,14 +102,15 @@ const portofolio = async (req, res, next) => {
         //menghasilkan variable project
 
         //ambil data experience
-
+        const { data: experiences } = await experienceController.getExperiences()
         //ambil data education
-        const {data: educations} = await educationController.getEducations()
+        const { data: educations } = await educationController.getEducations()
 
         //ambil data blog
         const { data: blogs } = await blogController.getByPage(1, 4)
 
         //ambil data skill by category
+        // const {data: skills} = await skillController.getSkillByCategory()
 
 
         res.status(200).json({
@@ -115,8 +118,10 @@ const portofolio = async (req, res, next) => {
             data: {
                 profile,
                 projects,
+                experiences,
                 educations,
-                blogs
+                blogs,
+                // skills
             }
         })
 

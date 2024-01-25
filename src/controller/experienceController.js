@@ -5,14 +5,23 @@ import { isExperience } from '../validation/experienceValidation.js'
 import { isID } from '../validation/mainValidation.js'
 
 const getAll = async (req, res) => {
-    const experience = await Prisma.experience.findMany()
+    const data = await getExperiences()
+    if (data) {
 
-    res.status(200).json({
-        message: 'berhasil masuk ke halaman experiences (semua data)',
-        experience
-    })
+        res.status(200).json({
+            message: 'berhasil masuk ke halaman experience (semua data)',
+            data
+        });
 
-}
+    }
+};
+
+const getExperiences = async (req, res, next) => {
+    return await Prisma.experience.findMany({
+        orderBy: { 'startDate': 'desc' }
+    });
+
+};
 
 const get = async (req, res, next) => {
     try {
@@ -107,8 +116,9 @@ const remove = async (req, res, next) => {
 }
 
 export default {
-    get,
     getAll,
+    getExperiences,
+    get,
     post,
     put,
     remove
