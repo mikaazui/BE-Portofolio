@@ -14,6 +14,7 @@ import { errorMid } from "./src/middleware/errorMid.js";
 import { authMiddleware } from "./src/middleware/authMiddleware.js";
 import { routeExperience } from "./src/router/experience.js";
 import fileService from "./src/services/fileService.js";
+import cors from 'cors';
 //deklaraai penggunaan apk express
 const app = express();
 dotenv.config();
@@ -27,17 +28,16 @@ app.use(cookieParser());
 app.use(logging);
 
 //create folder upload
-
+fileService.createFolder('./uploads');
+//create handle cors
+app.use(cors())
 //taruh paling atas
 //public api
-app.use(routerPublic)
+app.use(routerPublic);
 
-
-app.use(authMiddleware)
-
+app.use(authMiddleware);
 
 // router dibawah akan dicek authnya
-fileService.createFolder('./uploads');
 //separator start Auth
 app.use(routeAuth);
 
@@ -58,14 +58,11 @@ app.use(routeSkill);
 //separator start experience
 app.use(routeExperience);
 
-
 //middleware for unknown path and error
 app.use(routeUnknown);
 
 //middleware for error   
 app.use(errorMid);
-
-
 
 //separator server run
 const port = process.env.PORT
