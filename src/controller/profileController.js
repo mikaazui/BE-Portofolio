@@ -96,32 +96,33 @@ const portofolio = async (req, res, next) => {
     try {
         //ambil data profile
         const profile = await getProfile()
-        //ambil data project // 4 data saja
         //extract variable data > varoiable project
-        const { data: projects } = await projectController.getByPage(1, 4)
         //menghasilkan variable project
 
         //ambil data experience
-        const { data: experiences } = await experienceController.getExperiences()
+        const experiences = await experienceController.getExperiences()
         //ambil data education
-        const { data: educations } = await educationController.getEducations()
+        const educations = await educationController.getEducations()
+        //ambil data skill by category
+        const skills = await skillController.handleSkillByCategory()
 
+        //ambil data project // 4 data saja
+        const { data: projects } = await projectController.getByPage(1, 4)
         //ambil data blog
         const { data: blogs } = await blogController.getByPage(1, 4)
 
-        //ambil data skill by category
-        // const {data: skills} = await skillController.getSkillByCategory()
 
 
         res.status(200).json({
             message: 'berhasil ambil data portofolio',
             data: {
                 profile,
-                projects,
                 experiences,
                 educations,
-                blogs,
-                // skills
+                skills,
+                projects,
+                blogs
+
             }
         })
 
