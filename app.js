@@ -14,6 +14,7 @@ import { errorMid } from "./src/middleware/errorMid.js";
 import { authMiddleware } from "./src/middleware/authMiddleware.js";
 import { routeExperience } from "./src/router/experience.js";
 import fileService from "./src/services/fileService.js";
+import fs from 'fs/promises';
 import cors from 'cors';
 //deklaraai penggunaan apk express
 const app = express();
@@ -33,6 +34,23 @@ fileService.createFolder('./uploads');
 app.use(cors({
   origin: 'http://localhost:3000'
 }));
+
+//set static files
+app.use('/uploads', express.static('./uploads'));
+//handle not found file
+app.use('/uploads', async (req, res) => {
+  try {
+    await fs.access('./uploads' + req.url)
+    
+  } catch (error) {
+    res.status(404).json({
+      message: 'file not found'
+    });
+  };
+
+});
+
+
 //taruh paling atas
 //public api
 app.use(routerPublic);
