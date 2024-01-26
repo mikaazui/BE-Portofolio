@@ -32,23 +32,22 @@ const put = async (req, res, next) => {
     try {
         //get data profile dari database. findFirst
         const profile = await Prisma.profile.findFirst();
-
+        
         //collect data & validate
         //check
         let data = req.body;
-
         //add avatar
         if (req.file) {
             const avatar = '/' + req.file.path.replaceAll('\\', '/');
             data.avatar = avatar;
         }
-        data = Validate(isProfile, data);
-        console.log('data telah di validasi')
-        console.log(data)
-
+        
         //validate
         data = Validate(isProfile, data);
-
+        console.log('profile====================')
+        console.log(data)
+        // throw new Error ('test')
+        
         let dataProfile = {};
         if (!profile) {
             //jika null > create data baru
@@ -67,8 +66,13 @@ const put = async (req, res, next) => {
                 data
             });
             //hapus poto lama
-            if (profile.avatar) {
-                await fileService.removeFile(profile.avatar);
+            const avatar_lama = profile.avatar
+            const avatar_baru =  dataProfile.avatar
+            if (avatar_lama) {
+                if (avatar_lama != avatar_baru) {
+                    await fileService.removeFile(avatar_lama);
+                    
+                }
             }
 
         }

@@ -16,7 +16,7 @@ const removeFile = async (fileName) => {
     try {
         await fs.rm('./' +  fileName)
       } catch (error) {
-        throw (error)
+        // throw (error)
       }
 }
 
