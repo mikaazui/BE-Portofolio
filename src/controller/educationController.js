@@ -67,7 +67,7 @@ const put = async (req, res, next) => {
         let education = req.body;
         let id = req.params.id;
 
-        education = Validate(isEducation, blog)
+        education = Validate(isEducation, education)
         id = Validate(isID, id)
 
         const currentEducation = await Prisma.education.findUnique({

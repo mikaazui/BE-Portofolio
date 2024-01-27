@@ -8,6 +8,7 @@ import fs from 'fs/promises';
 import educationController from "./educationController.js";
 import experienceController from "./experienceController.js";
 import skillController from "./skillController.js";
+import dayjs from 'dayjs';
 const get = async (req, res) => {
     try {
         //cek database
@@ -32,7 +33,7 @@ const put = async (req, res, next) => {
     try {
         //get data profile dari database. findFirst
         const profile = await Prisma.profile.findFirst();
-        
+
         //collect data & validate
         //check
         let data = req.body;
@@ -41,13 +42,13 @@ const put = async (req, res, next) => {
             const avatar = '/' + req.file.path.replaceAll('\\', '/');
             data.avatar = avatar;
         }
-        
+
         //validate
         data = Validate(isProfile, data);
         console.log('profile====================')
         console.log(data)
         // throw new Error ('test')
-        
+
         let dataProfile = {};
         if (!profile) {
             //jika null > create data baru
@@ -67,11 +68,11 @@ const put = async (req, res, next) => {
             });
             //hapus poto lama
             const avatar_lama = profile.avatar
-            const avatar_baru =  dataProfile.avatar
+            const avatar_baru = dataProfile.avatar
             if (avatar_lama) {
                 if (avatar_lama != avatar_baru) {
                     await fileService.removeFile(avatar_lama);
-                    
+
                 }
             }
 
@@ -114,6 +115,17 @@ const portofolio = async (req, res, next) => {
         const { data: projects } = await projectController.getByPage(1, 4)
         //ambil data blog
         const { data: blogs } = await blogController.getByPage(1, 4)
+
+        //hitung tahun pengalaman kerja
+        //ambil project pertama array terakhir
+        const firstProject = projects.findLast(p => p.id)
+        const firstProjectDate = dayjs(firstProject.startDate);
+        profile.year_of_experience = dayjs().diff(firstProjectDate, "year")
+        profile.month_of_experience = dayjs().diff(firstProjectDate, "month")
+
+
+        //hitung jumlah project
+        profile.count_project = projects.length
 
 
 

@@ -11,15 +11,8 @@ const getAll = async (req, res, next) => {
 
         //limit
         const limit = parseInt(req.query.limit) || 10
-
-
-        const { data, total } = await getByPage(limit, skip)
-
+        const { data, total } = await getByPage(page, limit)
         const maxPage = Math.ceil(total / limit);
-
-
-
-
         res.status(200).json({
             message: 'berhasil masuk ke halaman project',
             data,

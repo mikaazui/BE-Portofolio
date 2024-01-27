@@ -5,10 +5,10 @@ import { isString100, isYear } from './mainValidation.js';
 const isEducation = joi.object({
     insituitionName: isString100.required().trim().label('Institution Name'),
     degree: isString100.trim().label('Degree'),
-    major: isString100.trim().label('Major'),
+    major: isString100.trim().allow('').label('Major'),
     city: isString100.trim().label('City'),
     startYear: isYear.label('Start Date'),
-    endYear: isYear.label('End Date')
+    endYear: isYear.allow(null, "").label('End Date')
 })
 
 export {

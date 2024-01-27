@@ -60,15 +60,15 @@ model project {
   title       String         @db.VarChar(100)
   description String?        @db.Text
   status      ProjectStatus? @default(ON_PROGRESS)
-  startDate   DateTime       @default(now())
-  endDate     DateTime?      @default(now())
+  startDate   DateTime       @db.Date()
+  endDate     DateTime?      @db.Date()
   url         String?        @db.VarChar(255)
   github      String?        @db.VarChar(255)
   company     String?        @db.VarChar(255)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @default(now()) @updatedAt
 
-  @@map("project")
+  @@map("project") 
 }
 
 enum ProjectStatus {
