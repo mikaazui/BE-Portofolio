@@ -10,12 +10,10 @@ const getAll = async (req, res) => {
         const page = parseInt(req.query.page) || 1
         //limit
         const limit = parseInt(req.query.limit) || 10
-        //skip
-        const skip = (page - 1) * limit 
 
       
 
-        const { data, total } = await getByPage(limit, skip)
+        const { data, total } = await getByPage(page, limit)
 
         const maxPage = Math.ceil(total / limit);
 
