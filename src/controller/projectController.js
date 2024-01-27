@@ -3,6 +3,12 @@ import { Validate } from "../application/validate.js"
 import { ResponseError } from "../error/responseError.js"
 import { isID } from "../validation/mainValidation.js"
 import { isProject } from "../validation/projectValidation.js"
+import dayjs from 'dayjs';
+const formatData = (project) => {
+    const date = project.createdAt
+    project.readableDate = dayjs(date).format('dddd DD MMMM YYYY')
+    project.shortDate = dayjs(date).format('ddd DD MMM YYYY')
+}
 const getAll = async (req, res, next) => {
 
     try {
@@ -13,6 +19,7 @@ const getAll = async (req, res, next) => {
         const limit = parseInt(req.query.limit) || 10
         const { data, total } = await getByPage(page, limit)
         const maxPage = Math.ceil(total / limit);
+
         res.status(200).json({
             message: 'berhasil masuk ke halaman project',
             data,
@@ -25,18 +32,19 @@ const getAll = async (req, res, next) => {
     catch (error) {
         next()
     }
-}
+};
 
 const getByPage = async (page, limit) => {
     //caclculate skip
     const skip = (page - 1) * limit;
 
-
     const data = await Prisma.project.findMany({
         take: limit,
         skip
     });
-
+    for (const project of data) {
+        formatData(project)
+    }
     //get total data
     const total = await Prisma.project.count()
     return {

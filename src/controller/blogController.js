@@ -3,18 +3,19 @@ import { Validate } from '../application/validate.js'
 import { ResponseError } from '../error/responseError.js'
 import { isBlog, isBlogTitle } from '../validation/blogValidation.js'
 import { isID } from '../validation/mainValidation.js'
-
+import dayjs from 'dayjs'
+const formatData = (blog) => {
+        const date = blog.createdAt
+        blog.readableDate = dayjs(date).format('dddd DD MMMM YYYY')
+        blog.shortDate = dayjs(date).format('ddd DD MMM YYYY')
+}
 const getAll = async (req, res) => {
     {
         //page
         const page = parseInt(req.query.page) || 1
         //limit
         const limit = parseInt(req.query.limit) || 10
-
-      
-
         const { data, total } = await getByPage(page, limit)
-
         const maxPage = Math.ceil(total / limit);
 
         res.status(200).json({
@@ -29,13 +30,17 @@ const getAll = async (req, res) => {
 };
 
 const getByPage = async (page, limit) => {
-      //calculate skip
-        const skip = (page - 1) * limit;
+    //calculate skip
+    const skip = (page - 1) * limit;
+
     
     const data = await Prisma.blog.findMany({
         take: limit,
         skip
     });
+    for (const blog of data) {
+        formatData(blog)
+    }
 
     //get total data
     const total = await Prisma.blog.count()
@@ -55,7 +60,7 @@ const get = async (req, res, next) => {
         const blog = await Prisma.blog.findUnique({ where: { id } });
         //handle not found
         if (blog == null) throw new ResponseError(404, `blog ${id} not found`)
-
+        formatData(blog)
         res.status(200).json({
             message: 'berhasil masuk ke halaman blogs (berdasakan id)',
             id,
