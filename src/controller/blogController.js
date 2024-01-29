@@ -5,9 +5,9 @@ import { isBlog, isBlogTitle } from '../validation/blogValidation.js'
 import { isID } from '../validation/mainValidation.js'
 import dayjs from 'dayjs'
 const formatData = (blog) => {
-        const date = blog.createdAt
-        blog.readableDate = dayjs(date).format('dddd DD MMMM YYYY')
-        blog.shortDate = dayjs(date).format('ddd DD MMM YYYY')
+    const date = blog.createdAt
+    blog.readableDate = dayjs(date).format('dddd DD MMMM YYYY')
+    blog.shortDate = dayjs(date).format('ddd DD MMM YYYY')
 }
 const getAll = async (req, res) => {
     {
@@ -21,7 +21,7 @@ const getAll = async (req, res) => {
 
         res.status(200).json({
             message: 'berhasil masuk ke halaman blog (semua data)',
-            data: data,
+            data,
             page,
             maxPage,
             total
@@ -34,10 +34,13 @@ const getByPage = async (page, limit) => {
     //calculate skip
     const skip = (page - 1) * limit;
 
-    
+
     const data = await Prisma.blog.findMany({
         take: limit,
-        skip
+        skip,
+        include: {
+            photos: true
+}
     });
     //di loop karena banyak isinya
     for (const blog of data) {
@@ -59,10 +62,14 @@ const get = async (req, res, next) => {
         let id = req.params.id
         id = Validate(isID, id)
 
-        const blog = await Prisma.blog.findUnique({ where: { id } });
+        const blog = await Prisma.blog.findUnique({
+            where:
+            { id },
+            include: { photos: true }
+        });
         //handle not found
         if (blog == null) throw new ResponseError(404, `blog ${id} not found`)
-        
+
         formatData(blog)
         res.status(200).json({
             message: 'berhasil masuk ke halaman blogs (berdasakan id)',
@@ -74,14 +81,39 @@ const get = async (req, res, next) => {
         next(error)
     }
 }
-
-
 const post = async (req, res, next) => {
     try {
+        //mengumpulkan photo path
+        const photos = []
+        if (req.files) {
+            //handle upload
+            for (const file of req.files) {
+                // add slash to photot
+                let photo = '/' + file.path.replaceAll('\\', '/')
+                //bikin object berdasaran schema prisma
+                photo = {
+                    path: photo
+                }
+                photos.push(photo)
+
+            }
+        }
+
         let blog = req.body;
         blog = Validate(isBlog, blog)
 
-        const data = await Prisma.blog.create({ data: blog });
+        const data = await Prisma.blog.create({
+            data: {
+                ...blog,
+                photos: {
+                    create: photos
+                }
+            },
+            include: {
+                photos: true
+            }
+
+        });
         formatData(data)
 
         res.status(200).json({
