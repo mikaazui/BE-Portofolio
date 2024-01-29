@@ -1,6 +1,7 @@
 import { Prisma } from '../application/prisma.js'
 import { Validate } from '../application/validate.js'
 import { ResponseError } from '../error/responseError.js'
+import fileService from '../services/fileService.js'
 import { isBlog, isBlogTitle } from '../validation/blogValidation.js'
 import { isID } from '../validation/mainValidation.js'
 import dayjs from 'dayjs'
@@ -122,6 +123,12 @@ const post = async (req, res, next) => {
         })
 
     } catch (error) {
+        if (req.files) {
+            //handle buang file
+            for (const file of req.files) {
+                fileService.removeFile(file.path)
+            }
+        }
         next(error)
     }
 }
