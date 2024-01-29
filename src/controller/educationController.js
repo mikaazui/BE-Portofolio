@@ -3,9 +3,22 @@ import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
 import { isEducation } from "../validation/educationvalidation.js";
 import { isID } from "../validation/mainValidation.js";
-
+import dayjs from 'dayjs';
+//TODO rapihin lagi (buat lebih konsisten variable2nya)
+const formatData = (education) => {
+    const startYear = education.startYear
+    const endYear = education.endYEar
+    education.readableStartDate = dayjs(startYear).format('MMMM YYYY')
+    //endate
+    education.readableEndDate = dayjs(endYear).format('MMMM YYYY')
+    if (endYear == null) {
+        education.readableEndDate = 'Present'
+    } else {
+        education.readableEndDate = dayjs(endYear).format('MMMM YYYY')
+    }
+};
 const getAll = async (req, res) => {
-   const data = await getEducations()
+    const data = await getEducations()
     if (data) {
 
         res.status(200).json({
@@ -16,13 +29,17 @@ const getAll = async (req, res) => {
     }
 };
 
-const getEducations = async (req, res, next) => {
-        return await Prisma.education.findMany({
-            orderBy: {'startYear' : 'desc'}
-        });
-       
-};
+const getEducations = async () => {
+    const data = await Prisma.education.findMany({
+        orderBy: { 'startYear': 'desc' }
+    });
+    for (const education of data) {
+        formatData(education)
+    }
+    return data;
 
+};
+//TODO rapihin lagi (bikin shorthand operation)
 const get = async (req, res, next) => {
     try {
         let id = req.params.id;
@@ -32,7 +49,7 @@ const get = async (req, res, next) => {
 
         //handle not found
         if (education == null) throw new ResponseError(404, `education ${id} not found`);
-
+        formatData(education)
 
         res.status(200).json({
             message: 'berhasil masuk ke halaman education (berdasakan id)',
@@ -52,6 +69,7 @@ const post = async (req, res, next) => {
         const data = await Prisma.education.create({
             data: education
         });
+        formatData(data)
 
         res.status(200).json({
             message: 'saved to data blog', data
@@ -71,7 +89,7 @@ const put = async (req, res, next) => {
         id = Validate(isID, id)
 
         const currentEducation = await Prisma.education.findUnique({
-            where: { id }, 
+            where: { id },
             select: { id: true }
         });
 
@@ -81,6 +99,7 @@ const put = async (req, res, next) => {
             where: { id },
             data: education
         });
+        formatData(data)
 
         res.status(200).json({
             message: `education ${id} updated successfully`,
@@ -112,7 +131,7 @@ const remove = async (req, res, next) => {
 
 
         res.status(200).json({
-            message: 'deleted education successfully', 
+            message: 'deleted education successfully',
             id
         });
     } catch (error) {

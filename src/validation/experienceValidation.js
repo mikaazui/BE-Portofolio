@@ -7,7 +7,7 @@ const isExperience = joi.object({
     title: isString100.required().label('Title'),
     description: isText.required().label('Description'),
     startDate: joi.date().required().max('now').label('Start Date'),
-    endDate: joi.date().min(joi.ref('startDate')).less('now').label('End Date'),
+    endDate: joi.date().allow(null, "").min(joi.ref('startDate')).less('now').label('End Date'),
 });
 
 //ntar tolong ubah descriptionnya ke text ya (dari prismanya)

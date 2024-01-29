@@ -15,6 +15,7 @@ const getAll = async (req, res) => {
         const page = parseInt(req.query.page) || 1
         //limit
         const limit = parseInt(req.query.limit) || 10
+        //ga perlu formatData karena sudah dari getByPagenya
         const { data, total } = await getByPage(page, limit)
         const maxPage = Math.ceil(total / limit);
 
@@ -38,6 +39,7 @@ const getByPage = async (page, limit) => {
         take: limit,
         skip
     });
+    //di loop karena banyak isinya
     for (const blog of data) {
         formatData(blog)
     }
@@ -60,6 +62,7 @@ const get = async (req, res, next) => {
         const blog = await Prisma.blog.findUnique({ where: { id } });
         //handle not found
         if (blog == null) throw new ResponseError(404, `blog ${id} not found`)
+        
         formatData(blog)
         res.status(200).json({
             message: 'berhasil masuk ke halaman blogs (berdasakan id)',
@@ -79,6 +82,7 @@ const post = async (req, res, next) => {
         blog = Validate(isBlog, blog)
 
         const data = await Prisma.blog.create({ data: blog });
+        formatData(data)
 
         res.status(200).json({
             message: 'saved to data blog',
@@ -108,6 +112,7 @@ const put = async (req, res, next) => {
             where: { id },
             data: blog
         })
+        formatData(data)
 
         res.status(200).json({
             message: `Blog ${id} updated successfully`,

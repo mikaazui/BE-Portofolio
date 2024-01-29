@@ -5,10 +5,17 @@ import { isID } from "../validation/mainValidation.js"
 import { isProject } from "../validation/projectValidation.js"
 import dayjs from 'dayjs';
 const formatData = (project) => {
-    const date = project.createdAt
-    project.readableDate = dayjs(date).format('dddd DD MMMM YYYY')
-    project.shortDate = dayjs(date).format('ddd DD MMM YYYY')
-}
+    const startDate = project.startDate
+    const endDate = project.endDate
+    project.readableStartDate = dayjs(startDate).format('MMMM YYYY')
+    //endate
+    project.readableEndDate = dayjs(endDate).format('MMMM YYYY')
+    if (endDate == null) {
+        project.readableEndDate = 'Present'
+    } else {
+        project.readableEndDate = dayjs(endDate).format('MMMM YYYY')
+    }
+};
 const getAll = async (req, res, next) => {
 
     try {
@@ -66,7 +73,7 @@ const get = async (req, res, next) => {
 
         //handle not found
         if (project == null) throw new ResponseError(404, `project ${id} not found`)
-
+        formatData(project)
         res.status(200).json({
             message: `berhasil mendapatkan project ${id}`,
         });
@@ -79,16 +86,17 @@ const get = async (req, res, next) => {
 
 const post = async (req, res, next) => {
     try {
-        let project = req.body;
-        project = Validate(isProject, project)
+        let data = req.body;
+        data = Validate(isProject, data)
 
-        const newProject = await Prisma.project.create({
+        const project = await Prisma.project.create({
             data: project
         });
+        formatData(project)
 
         res.status(200).json({
             message: 'berhasil masuk ke halaman project',
-            data: newProject
+            data: project
         })
 
     } catch (error) {
@@ -108,7 +116,9 @@ const put = async (req, res, next) => {
         const currentProject = await Prisma.project.findUnique({
             where: { id: id },
             select: { id: true }
-        }
+        },
+
+        formatData(currentProject)
         );
 
         if (!currentProject) throw new ResponseError(404, `project ${id} not found`);
