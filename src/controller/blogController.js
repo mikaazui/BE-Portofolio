@@ -41,7 +41,7 @@ const getByPage = async (page, limit) => {
         skip,
         include: {
             photos: true
-}
+        }
     });
     //di loop karena banyak isinya
     for (const blog of data) {
@@ -65,7 +65,7 @@ const get = async (req, res, next) => {
 
         const blog = await Prisma.blog.findUnique({
             where:
-            { id },
+                { id },
             include: { photos: true }
         });
         //handle not found
@@ -181,7 +181,8 @@ const updateBlogTitle = async (req, res, next) => {
 
         const data = await Prisma.blog.update({
             where: { id },
-            title
+            title,
+            include: { photos: true }
         })
 
         res.status(200).json({
