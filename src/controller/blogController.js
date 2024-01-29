@@ -132,14 +132,31 @@ const post = async (req, res, next) => {
         next(error)
     }
 }
+//blog id : 14
+// "/uploads/photos-1706500693814-648481283.jpg"
+// /uploads/photos-1706500590061-18980254.jpg
+
+//TODO LANJUTIN ESOK HARI
 
 const put = async (req, res, next) => {
     try {
         let blog = req.body;
         let id = req.params.id;
 
+        console.log('req body =============')
+        console.log(req.body)
+        console.log('req files =============')
+        console.log(req.files)
+        //new photo
+        const newPhotos = req.files
+        
+        
+        //validate blog
         blog = Validate(isBlog, blog)
+        //validate id
         id = Validate(isID, id)
+
+        throw new Error ('test update')
 
         const currentBlog = await Prisma.blog.findUnique({
             where: { id }, select: { id: true }
@@ -159,6 +176,12 @@ const put = async (req, res, next) => {
             data
         })
     } catch (error) {
+        if (req.files) {
+            //handle buang file
+            for (const file of req.files) {
+                fileService.removeFile(file.path)
+            }
+        }
         next(error)
     }
 }

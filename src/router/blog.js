@@ -22,11 +22,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 //semua route butuh check auth
-routeBlog.post('/blog', upload.array('photos'), blogController.post);//create blog
-routeBlog.put('/blog', upload.array('photos'), blogController.put);//update blog
-routeBlog.post('/blog', blogController.post); //create post/blog
+//create blog + photo
+routeBlog.post('/blog', upload.array('photos', 10), blogController.post);//create blog
+//update blog + photo
+routeBlog.put('/blog', upload.array('photos', 10), blogController.put);//update blog
+//patch update sebagian
 routeBlog.patch('/update_blog_title/:id', blogController.updateBlogTitle);
-
-routeBlog.route('/blog/:id')
-    .put(blogController.put) //update by id
-    .delete(blogController.remove) //delete by id
+//delete
+routeBlog.delete('/blog/:id', blogController.remove) //delete by id
