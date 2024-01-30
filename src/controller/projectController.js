@@ -1,6 +1,7 @@
 import { Prisma } from "../application/prisma.js"
 import { Validate } from "../application/validate.js"
 import { ResponseError } from "../error/responseError.js"
+import fileService from "../services/fileService.js"
 import { isID } from "../validation/mainValidation.js"
 import { isProject } from "../validation/projectValidation.js"
 import dayjs from 'dayjs';
@@ -86,17 +87,32 @@ const get = async (req, res, next) => {
 
 const post = async (req, res, next) => {
     try {
-        let data = req.body;
-        data = Validate(isProject, data)
+        //mengumpulkan photo path
+        const photos = fileService.getUploadedPhotos(req)
 
-        const project = await Prisma.project.create({
-            data: project
+        let project = req.body;
+        project = Validate(isProject, project)
+
+        const data = await Prisma.project.create({
+            data: {
+                ...project,
+                photos: {
+                    create: photos
+                }
+            },
+            include: {
+                photos: true
+            }
+
         });
+        formatData(data)
+
+
         formatData(project)
 
         res.status(200).json({
             message: 'berhasil masuk ke halaman project',
-            data: project
+            data
         })
 
     } catch (error) {
@@ -118,7 +134,7 @@ const put = async (req, res, next) => {
             select: { id: true }
         },
 
-        formatData(currentProject)
+            formatData(currentProject)
         );
 
         if (!currentProject) throw new ResponseError(404, `project ${id} not found`);

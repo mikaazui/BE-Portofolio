@@ -175,9 +175,7 @@ const put = async (req, res, next) => {
 
         delete blog.photos;
         //ambil photo yang tidak dihapus
-        console.log('id photo yang dipertahankan')
-        console.log(keepPhotos)
-        console.log('blog yang mau disimpan')
+               
         console.log(blog)
 
         // throw new Error('inio bukan error tapi alert update test ==========')
