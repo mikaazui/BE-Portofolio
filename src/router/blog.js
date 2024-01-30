@@ -3,7 +3,6 @@ import blogController from "../controller/blogController.js";
 import fileService from "../services/fileService.js";
 export const routeBlog = express.Router();
 
-//semua route butuh check auth
 //create blog + photo
 routeBlog.post('/blog', fileService.upload.array('photos', 10), blogController.post);//create blog
 //update blog + photo

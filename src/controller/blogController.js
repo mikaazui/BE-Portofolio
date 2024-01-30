@@ -84,28 +84,11 @@ const get = async (req, res, next) => {
     }
 }
 
-const getUploadedPhotos = (req) => {
-    const photos = []
-    if (req.files) {
-        //handle upload
-        for (const file of req.files) {
-            // add slash to photot
-            let photo = '/' + file.path.replaceAll('\\', '/')
-            //bikin object berdasaran schema prisma
-            photo = {
-                path: photo
-            }
-            photos.push(photo)
-
-        }
-    }
-    return photos;
-}
 
 const post = async (req, res, next) => {
     try {
         //mengumpulkan photo path
-        const photos = getUploadedPhotos(req)
+        const photos = fileService.getUploadedPhotos(req)
 
         let blog = req.body;
         blog = Validate(isBlog, blog)
@@ -201,7 +184,7 @@ const put = async (req, res, next) => {
         //create photo baru
         //buang photo ya gitdak dipertahankan
         //simpan photo baru
-        const newPhotos = getUploadedPhotos(req)
+        const newPhotos = fileService.getUploadedPhotos(req)
 
         //update blog + delete photo yang tidak dipertahankan
         const data = await Prisma.blog.update({

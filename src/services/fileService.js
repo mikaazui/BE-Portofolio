@@ -16,8 +16,27 @@ const storage = multer.diskStorage({
 
       // cb(null, file.fieldname + '-' + uniqueSuffix + '.' + ext)
   }
-})
+});
 const upload = multer({ storage: storage })
+
+const getUploadedPhotos = (req) => {
+  const photos = []
+  if (req.files) {
+      //handle upload
+      for (const file of req.files) {
+          // add slash to photot
+          let photo = '/' + file.path.replaceAll('\\', '/')
+          //bikin object berdasaran schema prisma
+          photo = {
+              path: photo
+          }
+          photos.push(photo)
+
+      }
+  }
+  return photos;
+}
+
 
 const createFolder = async (folderName) => {
     try {
@@ -43,5 +62,6 @@ const removeFile = async (fileName) => {
 export default{
     createFolder,
     removeFile,
-    upload
+    upload,
+    getUploadedPhotos
 }
