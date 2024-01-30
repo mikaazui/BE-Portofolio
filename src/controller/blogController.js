@@ -41,7 +41,8 @@ const getByPage = async (page, limit) => {
         skip,
         include: {
             photos: true
-        }
+        },
+        orderBy : { createdAt: 'desc' }//ambil yang terbaru
     });
     //di loop karena banyak isinya
     for (const blog of data) {
@@ -146,6 +147,7 @@ const post = async (req, res, next) => {
 //TODO LANJUTIN ESOK HARI
 
 const put = async (req, res, next) => {
+    console.log('masuk method put')
     try {
         let blog = req.body;
         let id = req.params.id;
@@ -225,6 +227,7 @@ const put = async (req, res, next) => {
             data
         })
     } catch (error) {
+        console.log(error)
         if (req.files) {
             //handle buang file jika terjadi error
             for (const file of req.files) {
