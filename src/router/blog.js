@@ -25,7 +25,7 @@ const upload = multer({ storage: storage })
 //create blog + photo
 routeBlog.post('/blog', upload.array('photos', 10), blogController.post);//create blog
 //update blog + photo
-routeBlog.put('/blog', upload.array('photos', 10), blogController.put);//update blog
+routeBlog.put('/blog/:id', upload.array('photos', 10), blogController.put);//update blog
 //patch update sebagian
 routeBlog.patch('/update_blog_title/:id', blogController.updateBlogTitle);
 //delete

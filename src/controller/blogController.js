@@ -124,7 +124,7 @@ const post = async (req, res, next) => {
 
     } catch (error) {
         if (req.files) {
-            //handle buang file
+            //handle buang file kila terjadi error
             for (const file of req.files) {
                 fileService.removeFile(file.path)
             }
@@ -147,26 +147,65 @@ const put = async (req, res, next) => {
         console.log(req.body)
         console.log('req files =============')
         console.log(req.files)
-        //new photo
-        const newPhotos = req.files
-        
-        
+
+
         //validate blog
         blog = Validate(isBlog, blog)
         //validate id
         id = Validate(isID, id)
 
-        throw new Error ('test update')
 
         const currentBlog = await Prisma.blog.findUnique({
-            where: { id }, select: { id: true }
+            where: { id }, include: { photos: true }
         })
 
         if (!currentBlog) throw new ResponseError(404, `blog ${id} not found`)
 
+        //id photo = [5, 6]
+        console.log('currentBlog===========')
+        console.log(currentBlog)
+        console.log('blog')
+        console.log(blog)
+
+        const currentPhotos = currentBlog.photos.map(photo => photo.id)
+        const idYangDipertahankan = blog.photos || []; //deafult array kosong []
+        console.log('currentPhotos')
+        console.log(currentPhotos)
+        //filter photo yang di pertahankan
+
+        //ambil photo yang tidak dipertahankan
+        const keepPhotos = currentPhotos.filter(idPhoto => idYangDipertahankan.includes(idPhoto));
+
+        //update blog
+        // data yang mau diupdate
+        console.log('data yang mau di update')
+        //hapus variable photo
+
+        delete blog.photos;
+        //ambil photo yang tidak dihapus
+        console.log('id photo yang dipertahankan')
+        console.log(keepPhotos)
+        console.log('blog yang mau disimpan')
+        console.log(blog)
+
+        // throw new Error('inio bukan error tapi alert update test ==========')
+        //create photo baru
+        //buang photo ya gitdak dipertahankan
+        //simpan photo baru
+
+        //update blog + delete photo yang tidak dipertahankan
         const data = await Prisma.blog.update({
             where: { id },
-            data: blog
+            data: {
+                ...blog,
+                photos: {
+                    deleteMany: {
+                        id: {
+                            notIn: keepPhotos
+                        }
+                    }
+                }
+            }
         })
         formatData(data)
 
@@ -177,7 +216,7 @@ const put = async (req, res, next) => {
         })
     } catch (error) {
         if (req.files) {
-            //handle buang file
+            //handle buang file jika terjadi error
             for (const file of req.files) {
                 fileService.removeFile(file.path)
             }
