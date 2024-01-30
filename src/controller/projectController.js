@@ -131,21 +131,55 @@ const put = async (req, res, next) => {
 
         const currentProject = await Prisma.project.findUnique({
             where: { id: id },
-            select: { id: true }
-        },
-
-            formatData(currentProject)
+            include: {
+                photos: true
+            }
+        }
         );
 
         if (!currentProject) throw new ResponseError(404, `project ${id} not found`);
 
-        const updatedData = await Prisma.project.update({
-            where: { id: id },
-            data: project
-        });
+        const currentPhotos = currentProject.photos.map(photo => photo.id)
+        const idYangDipertahankan = project.photos || []; //deafult array kosong []
+        console.log('currentPhotos')
+        console.log(currentPhotos)
+        //filter photo yang di pertahankan
+
+        //ambil photo yang tidak dipertahankan
+        const keepPhotos = currentPhotos.filter(idPhoto => idYangDipertahankan.includes(idPhoto));
+
+        //update blog
+        // data yang mau diupdate
+        console.log('data yang mau di update')
+        //hapus variable photo
+
+        delete project.photos;
+        //ambil photo yang tidak dihapus
+        //create photo baru
+        //buang photo ya gitdak dipertahankan
+        //simpan photo baru
+        const newPhotos = fileService.getUploadedPhotos(req)
+
+        //update blog + delete photo yang tidak dipertahankan
+        const data = await Prisma.project.update({
+            where: { id },
+            data: {
+                ...project,
+                photos: {
+                    deleteMany: {
+                        id: {
+                            notIn: keepPhotos
+                        }
+                    },
+                    create: newPhotos
+                }
+            },
+            include: { photos: true }
+        })
+        formatData(data)
         res.status(200).json({
             message: `berhasil mengupdate project ${id}`,
-            data: updatedData
+            data
         });
 
     } catch (error) {

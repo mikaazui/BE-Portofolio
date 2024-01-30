@@ -7,8 +7,6 @@ export const routeProject = express.Router();
 
 routeProject.post('/project', fileService.upload.array('photos', 10), projectController.post);//create blog
 //update blog + photo
-// routeProject.put('/project/:id',  fileService.upload.array('photos', 10), projectController.put);//update blog
+routeProject.put('/project/:id',  fileService.upload.array('photos', 10), projectController.put);//update blog
 
-routeProject.route('/project/:id')
-    .put(projectController.put)//update
-    .delete(projectController.remove)//delete
+routeProject.delete('/project/:id', projectController.remove)//delete
