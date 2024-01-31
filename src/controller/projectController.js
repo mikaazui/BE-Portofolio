@@ -49,7 +49,7 @@ const getByPage = async (page, limit) => {
     const data = await Prisma.project.findMany({
         take: limit,
         include: { photos: true },
-        orderBy: { startDate: 'desc' },
+        orderBy: { startDate: 'asc' },
         skip
     });
     for (const project of data) {
@@ -73,7 +73,6 @@ const get = async (req, res, next) => {
         const project = await Prisma.project.findUnique({
             where: { id },
             include: { photos: true },
-            orderBy: { startDate: 'desc' }
         });
 
         //handle not found
@@ -97,18 +96,33 @@ const post = async (req, res, next) => {
         let project = req.body;
         project = Validate(isProject, project)
 
+        console.log(photos)
+        console.log(project)
+
+        const skills = project.skills.map(s => {
+            return {
+                skillId: s
+            }
+        })
+
+
         const data = await Prisma.project.create({
             data: {
                 ...project,
-                photos: { create: photos }
+                photos: { create: photos },
+                skills: {
+                    createMany: { data: skills }
+                },
             },
-            include: { photos: true }
+            include: { photos: true, skills: true },
+
 
         });
         formatData(data)
+        console.log('data skills====')
+        console.log(skills)
 
 
-        formatData(project)
 
         res.status(200).json({
             message: 'berhasil masuk ke halaman project',

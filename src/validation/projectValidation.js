@@ -10,5 +10,6 @@ export const isProject = joi.object({
     url: isURL.label('URL'),
     gitHub: isURL.label('GitHub'),
     company: isString100.label('Company'),
-    photos: joi.array().items(joi.number())
+    photos: joi.array().items(joi.number()),
+    skills: joi.array().items(joi.number())
 })
