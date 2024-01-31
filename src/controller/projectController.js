@@ -16,6 +16,12 @@ const formatData = (project) => {
     } else {
         project.readableEndDate = dayjs(endDate).format('MMMM YYYY')
     }
+
+    const skills = project.skills.map(projectSkill => {
+        return projectSkill.Skill
+    })
+    project.skills = skills;
+    console.log(skills)
 };
 const getAll = async (req, res, next) => {
 
@@ -80,6 +86,7 @@ const get = async (req, res, next) => {
         formatData(project)
         res.status(200).json({
             message: `berhasil mendapatkan project ${id}`,
+            project
         });
 
     } catch (error) {

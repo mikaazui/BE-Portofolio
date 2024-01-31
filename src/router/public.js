@@ -27,7 +27,7 @@ routerPublic.get('/portofolio', profileController.portofolio)
 //project
 
 routerPublic.get('/projects', projectController.getAll)//get all
-routerPublic.get('/project', projectController.get)//get by id
+routerPublic.get('/project/:id', projectController.get)//get by id
 
 //skill
 routerPublic.get('/skills', skillController.getAll)//get all
