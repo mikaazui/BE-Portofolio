@@ -48,7 +48,7 @@ const getByPage = async (page, limit) => {
 
     const data = await Prisma.project.findMany({
         take: limit,
-        include: { photos: true },
+        include: { photos: true, skills: true },
         orderBy: { startDate: 'asc' },
         skip
     });
@@ -72,7 +72,7 @@ const get = async (req, res, next) => {
 
         const project = await Prisma.project.findUnique({
             where: { id },
-            include: { photos: true },
+            include: { photos: true, skills: true},
         });
 
         //handle not found
