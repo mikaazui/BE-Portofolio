@@ -112,7 +112,6 @@ const post = async (req, res, next) => {
             }
         })
 
-
         const data = await Prisma.project.create({
             data: {
                 ...project,
@@ -121,7 +120,7 @@ const post = async (req, res, next) => {
                     createMany: { data: skills }
                 },
             },
-            include: { photos: true, skills: true },
+            include: { photos: true,  skills: {include: {Skill: true}} },
 
 
         });
@@ -169,7 +168,6 @@ const put = async (req, res, next) => {
 
         //update blog
         // data yang mau diupdate
-        console.log('data yang mau di update')
         //hapus variable photo
 
         delete project.photos;
@@ -178,6 +176,13 @@ const put = async (req, res, next) => {
         //buang photo ya gitdak dipertahankan
         //simpan photo baru
         const newPhotos = fileService.getUploadedPhotos(req)
+
+        const skills = project.skills.map(s => {
+            return {
+                skillId: s
+            }
+        })
+        delete project.skills;
 
         //update blog + delete photo yang tidak dipertahankan
         const data = await Prisma.project.update({
@@ -190,10 +195,15 @@ const put = async (req, res, next) => {
                             notIn: keepPhotos
                         }
                     },
-                    create: newPhotos
+                    create: newPhotos,
                 }
+                ,
+                skills: {
+                    deleteMany: {}, //clear data relasi
+                    createMany: { data: skills } //simpan ulang, data hasil mapping
+                },
             },
-            include: { photos: true }
+            include: { photos: true,  skills: {include: {Skill: true}} },
         })
         formatData(data)
         res.status(200).json({
