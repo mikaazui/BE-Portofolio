@@ -48,6 +48,8 @@ const getByPage = async (page, limit) => {
 
     const data = await Prisma.project.findMany({
         take: limit,
+        include: { photos: true },
+        orderBy: { startDate: 'desc' },
         skip
     });
     for (const project of data) {
@@ -69,7 +71,9 @@ const get = async (req, res, next) => {
         id = Validate(isID, id)
 
         const project = await Prisma.project.findUnique({
-            where: { id }
+            where: { id },
+            include: { photos: true },
+            orderBy: { startDate: 'desc' }
         });
 
         //handle not found
@@ -96,13 +100,9 @@ const post = async (req, res, next) => {
         const data = await Prisma.project.create({
             data: {
                 ...project,
-                photos: {
-                    create: photos
-                }
+                photos: { create: photos }
             },
-            include: {
-                photos: true
-            }
+            include: { photos: true }
 
         });
         formatData(data)
@@ -131,9 +131,7 @@ const put = async (req, res, next) => {
 
         const currentProject = await Prisma.project.findUnique({
             where: { id: id },
-            include: {
-                photos: true
-            }
+            include: { photos: true }
         }
         );
 
