@@ -4,7 +4,6 @@ import { ResponseError } from "../error/responseError.js";
 import { isEducation } from "../validation/educationvalidation.js";
 import { isID } from "../validation/mainValidation.js";
 import dayjs from 'dayjs';
-//TODO rapihin lagi (buat lebih konsisten variable2nya)
 const formatData = (education) => {
     const startYear = education.startYear
     const endYear = education.endYEar
@@ -21,10 +20,7 @@ const getAll = async (req, res) => {
     const data = await getEducations()
     if (data) {
 
-        res.status(200).json({
-            message: 'berhasil masuk ke halaman education (semua data)',
-            data
-        });
+        res.status(200).json(data);
 
     }
 };
@@ -39,21 +35,19 @@ const getEducations = async () => {
     return data;
 
 };
-//TODO rapihin lagi (bikin shorthand operation)
 const get = async (req, res, next) => {
     try {
         let id = req.params.id;
         id = Validate(isID, id);
 
-        const education = await Prisma.education.findUnique({ where: { id } });
+        const data = await Prisma.data.findUnique({ where: { id } });
 
         //handle not found
-        if (education == null) throw new ResponseError(404, `education ${id} not found`);
-        formatData(education)
+        if (data == null) throw new ResponseError(404, `education ${id} not found`);
+        formatData(data)
 
         res.status(200).json({
-            message: 'berhasil masuk ke halaman education (berdasakan id)',
-            id, data: education
+            id, data
         });
 
     } catch (error) {

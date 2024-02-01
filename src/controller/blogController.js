@@ -21,7 +21,6 @@ const getAll = async (req, res) => {
         const maxPage = Math.ceil(total / limit);
 
         res.status(200).json({
-            message: 'berhasil masuk ke halaman blog (semua data)',
             data,
             page,
             maxPage,
@@ -39,25 +38,16 @@ const getByPage = async (page, limit) => {
     const data = await Prisma.blog.findMany({
         take: limit,
         skip,
-        include: {
-            photos: true
-        },
-        orderBy : { createdAt: 'desc' }//ambil yang terbaru
+        include: { photos: true },
+        orderBy: { createdAt: 'desc' }//ambil yang terbaru
     });
     //di loop karena banyak isinya
-    for (const blog of data) {
-        formatData(blog)
-    }
+    for (const blog of data) { formatData(blog) }
 
     //get total data
     const total = await Prisma.blog.count()
-    return {
-        data,
-        total
-    }
+    return { data, total }
 };
-
-
 
 const get = async (req, res, next) => {
     try {
@@ -74,7 +64,6 @@ const get = async (req, res, next) => {
 
         formatData(blog)
         res.status(200).json({
-            message: 'berhasil masuk ke halaman blogs (berdasakan id)',
             id,
             blog
 
@@ -107,10 +96,7 @@ const post = async (req, res, next) => {
         });
         formatData(data)
 
-        res.status(200).json({
-            message: 'saved to data blog',
-            data
-        })
+        res.status(200).json(data)
 
     } catch (error) {
         if (req.files) {
@@ -122,12 +108,6 @@ const post = async (req, res, next) => {
         next(error)
     }
 }
-
-//blog id : 14
-// "/uploads/photos-1706500693814-648481283.jpg"
-// /uploads/photos-1706500590061-18980254.jpg
-
-//TODO LANJUTIN ESOK HARI
 
 const put = async (req, res, next) => {
     console.log('masuk method put')
@@ -175,7 +155,7 @@ const put = async (req, res, next) => {
 
         delete blog.photos;
         //ambil photo yang tidak dihapus
-               
+
         console.log(blog)
 
         // throw new Error('inio bukan error tapi alert update test ==========')

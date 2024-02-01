@@ -21,7 +21,6 @@ const formatData = (project) => {
         return projectSkill.Skill
     })
     project.skills = skills;
-    console.log(skills)
 };
 const getAll = async (req, res, next) => {
 
@@ -35,7 +34,6 @@ const getAll = async (req, res, next) => {
         const maxPage = Math.ceil(total / limit);
 
         res.status(200).json({
-            message: 'berhasil masuk ke halaman project',
             data,
             page,
             total,
@@ -85,7 +83,6 @@ const get = async (req, res, next) => {
         if (project == null) throw new ResponseError(404, `project ${id} not found`)
         formatData(project)
         res.status(200).json({
-            message: `berhasil mendapatkan project ${id}`,
             project
         });
 
@@ -131,7 +128,6 @@ const post = async (req, res, next) => {
 
 
         res.status(200).json({
-            message: 'berhasil masuk ke halaman project',
             data
         })
 
@@ -207,7 +203,6 @@ const put = async (req, res, next) => {
         })
         formatData(data)
         res.status(200).json({
-            message: `berhasil mengupdate project ${id}`,
             data
         });
 
@@ -234,7 +229,7 @@ const remove = async (req, res, next) => {
             where: { id: id }
         });
         res.status(200).json({
-            message: `berhasil menghapus project ${id}`,
+            message: `project ${id} deleted successfully`,
         });
 
     } catch (error) {

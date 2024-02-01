@@ -12,18 +12,11 @@ import dayjs from 'dayjs';
 const get = async (req, res) => {
     try {
         //cek database
-        let profile = await Prisma.profile.findFirst();
-
-
+        let data = await Prisma.profile.findFirst();
         //if ada > kirim data asli
-        if (profile) {
-            res.status(200).json({
-                message: 'berhasil ambil data profile',
-                data: profile
-            });
-
+        if (data) {
+            res.status(200).json(data);
         };
-
     } catch (error) {
         next(error);
     };
@@ -94,7 +87,6 @@ const put = async (req, res, next) => {
 
         next(error)
     }
-
 };
 
 const portofolio = async (req, res, next) => {
@@ -127,11 +119,7 @@ const portofolio = async (req, res, next) => {
         //hitung jumlah project
         profile.count_project = projects.length
 
-
-
         res.status(200).json({
-            message: 'berhasil ambil data portofolio',
-            data: {
                 profile,
                 experiences,
                 educations,
@@ -139,7 +127,6 @@ const portofolio = async (req, res, next) => {
                 projects,
                 blogs
 
-            }
         })
 
     } catch (error) {

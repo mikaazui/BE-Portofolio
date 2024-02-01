@@ -7,12 +7,11 @@ import { ResponseError } from "../error/responseError.js"
 
 const getAll = async (req, res, next) => {
   try {
-    const data = getSkillByCategory()
+    const data = await Prisma.skill.findMany({
+      include: { category: true }
+    })
 
-    res.status(200).json({
-      message: 'berhasil masuk ke halaman skills',
-      data
-    });
+    res.status(200).json(data);
 
   } catch (error) {
     next(error)
@@ -22,21 +21,18 @@ const getAll = async (req, res, next) => {
 }
 
 const getSkillByCategory = async (req, res, next) => {
-   const data = await handleSkillByCategory()
-  
-    res.status(200).json({
-      message: 'berhasil masuk ke halaman skills dengan kategori',
-      data
-    });
+  const data = await handleSkillByCategory()
+
+  res.status(200).json(data);
 
 }
 
 const handleSkillByCategory = async (data) => {
   const skill = await Prisma.skillCategory.findMany({
     include: {
-          Skill: true
+      Skill: true
     },
-    orderBy: {title:'asc'}
+    orderBy: { title: 'asc' }
   });
   return skill
 }
@@ -69,10 +65,8 @@ const post = async (req, res, next) => {
   try {
     let data = req.body
     data = Validate(isSkill, data)
-
     // const category_id = await create_or_find_skill_category(data.category)
     const category_id = await skillService.create_or_find_skill_category(data.category);
-
     const insert_data = {
       title: data.title,
       svg: data.svg,
@@ -101,10 +95,7 @@ const put = async (req, res, next) => {
 
     const currentSkill = await Prisma.skill.findUnique({
       where: { id },
-      select: {
-        id: true,
-        skillCategoryId: true
-      }
+      select: { id: true, skillCategoryId: true }
     });
 
     // handle not found
@@ -130,16 +121,14 @@ const put = async (req, res, next) => {
     await skillService.remove_category(previous_skill_id);
 
     res.status(200).json({
-      message: `skill ${id} updated successfully`,
       id,
       updatedSkill
     });
-
   } catch (error) {
     next(error)
   }
-
 }
+
 const remove = async (req, res, next) => {
   try {
     let id = req.params.id;
@@ -147,15 +136,11 @@ const remove = async (req, res, next) => {
     id = Validate(isID, id);
     const currentSkill = await Prisma.skill.findUnique({
       where: { id },
-      select: {
-        id: true,
-        skillCategoryId: true
-      }
+      select: { id: true, skillCategoryId: true }
     }
     );
 
     if (!currentSkill) throw new ResponseError(404, `skill ${id} not found`)
-
 
     //delete execution
 
