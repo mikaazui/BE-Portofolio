@@ -133,26 +133,21 @@ const put = async (req, res, next) => {
 
         if (!currentBlog) throw new ResponseError(404, `blog ${id} not found`)
 
-        //id photo = [5, 6]
-        console.log('currentBlog===========')
-        console.log(currentBlog)
-        console.log('blog')
-        console.log(blog)
-
         const currentPhotos = currentBlog.photos.map(photo => photo.id)
         const idYangDipertahankan = blog.photos || []; //deafult array kosong []
-        console.log('currentPhotos')
-        console.log(currentPhotos)
         //filter photo yang di pertahankan
 
         //ambil photo yang tidak dipertahankan
         const keepPhotos = currentPhotos.filter(idPhoto => idYangDipertahankan.includes(idPhoto));
+        // const photos_to_be_removed = currentBlog.photos.filter(idPhoto => !idYangDipertahankan.includes(idPhoto));
+        // // console.log('currentPhotosan)
+        // console.log('keepPhotos')
+        // console.log(keepPhotos)
+        // console.log('photos_to_be_removed')
+        // console.log(photos_to_be_removed)
 
-        //update blog
-        // data yang mau diupdate
-        console.log('data yang mau di update')
+        // throw new Error ('test error') 
         //hapus variable photo
-
         delete blog.photos;
         //ambil photo yang tidak dihapus
 
