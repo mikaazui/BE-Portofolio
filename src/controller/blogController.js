@@ -139,12 +139,12 @@ const put = async (req, res, next) => {
 
         //ambil photo yang tidak dipertahankan
         const keepPhotos = currentPhotos.filter(idPhoto => idYangDipertahankan.includes(idPhoto));
-        // const photos_to_be_removed = currentBlog.photos.filter(idPhoto => !idYangDipertahankan.includes(idPhoto));
-        // // console.log('currentPhotosan)
-        // console.log('keepPhotos')
-        // console.log(keepPhotos)
-        // console.log('photos_to_be_removed')
-        // console.log(photos_to_be_removed)
+        const photos_to_be_removed = currentBlog.photos.filter(idPhoto => !idYangDipertahankan.includes(idPhoto));
+        // console.log('currentPhotosan)
+        console.log('keepPhotos')
+        console.log(keepPhotos)
+        console.log('photos_to_be_removed')
+        console.log(photos_to_be_removed)
 
         // throw new Error ('test error') 
         //hapus variable photo
@@ -167,6 +167,12 @@ const put = async (req, res, next) => {
             },
             include: { photos: true }
         })
+
+        // remove unused photo
+        for (const photo of photos_to_be_removed) {
+            await fileService.removeFile(photo.path)
+        }
+
         formatData(data)
 
         res.status(200).json({
@@ -217,9 +223,13 @@ const remove = async (req, res, next) => {
         id = Validate(isID, id);
         const currentBlog = await Prisma.blog.findUnique({
             where: { id },
-            select: { id: true }
+            include: { photos: true }
         })
         if (!currentBlog) throw new ResponseError(404, `blog ${id} not found`)
+
+        for (const photo of currentBlog.photos) {
+            await fileService.removeFile(photo.path)
+        }
 
         //delete execution
         await Prisma.blog.delete({ where: { id } })

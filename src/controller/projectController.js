@@ -152,7 +152,11 @@ const put = async (req, res, next) => {
 
         //ambil photo yang tidak dipertahankan
         const keepPhotos = currentPhotos.filter(idPhoto => idYangDipertahankan.includes(idPhoto));
-
+        const photos_to_be_removed = currentProject.photos.filter(idPhoto => !idYangDipertahankan.includes(idPhoto));
+        console.log('keepPhotos')
+        console.log(keepPhotos)
+        console.log('photos_to_be_removed')
+        console.log(photos_to_be_removed)
         //update blog
         // data yang mau diupdate
         //hapus variable photo
@@ -163,12 +167,16 @@ const put = async (req, res, next) => {
         //buang photo ya gitdak dipertahankan
         //simpan photo baru
         const newPhotos = fileService.getUploadedPhotos(req)
+        let skills = [];
+        if (project.skills) {
+            skills = project.skills.map(s => {
+                return { skillId: s }
+            });
+        };
 
-        const skills = project.skills.map(s => {
-            return { skillId: s }
-        });
+
         delete project.skills;
-
+        // throw new Error('inio bukan error tapi alert update test ==========')
         //update blog + delete photo yang tidak dipertahankan
         const data = await Prisma.project.update({
             where: { id },
@@ -189,7 +197,12 @@ const put = async (req, res, next) => {
                 },
             },
             include: { photos: true, skills: { include: { Skill: true } } },
-        })
+        });
+
+        for (const photo of currentProject.photos) {
+            await fileService.removeFile(photo.path)
+        }
+
         formatData(data)
         res.status(200).json({
             data
@@ -199,7 +212,7 @@ const put = async (req, res, next) => {
         next(error)
     }
 
-}
+};
 //TODO bikin method hapus photo
 const remove = async (req, res, next) => {
     try {
@@ -208,10 +221,15 @@ const remove = async (req, res, next) => {
         id = Validate(isID, id);
         const currentProject = await Prisma.project.findUnique({
             where: { id },
-            select: { id: true }
+            include: { photos: true }
         });
 
         if (!currentProject) throw new ResponseError(404, `project ${id} not found`)
+
+
+        for (const photo of currentBlog.photos) {
+            await fileService.removeFile(photo.path)
+        }
         //delete execution
 
         await Prisma.project.delete({
