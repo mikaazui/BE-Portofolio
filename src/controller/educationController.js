@@ -64,11 +64,7 @@ const post = async (req, res, next) => {
             data: education
         });
         formatData(data)
-
-        res.status(200).json({
-            message: 'saved to data blog', data
-        });
-
+        res.status(200).json(data);
     } catch (error) {
         next(error)
     }
@@ -95,15 +91,12 @@ const put = async (req, res, next) => {
         });
         formatData(data)
 
-        res.status(200).json({
-            message: `education ${id} updated successfully`,
-            id, data
-        });
+        res.status(200).json(data);
     } catch (error) {
         next(error)
     }
 
-}
+};
 
 const remove = async (req, res, next) => {
     try {
@@ -122,17 +115,13 @@ const remove = async (req, res, next) => {
         await Prisma.education.delete({
             where: { id }
         });
-
-
         res.status(200).json({
-            message: 'deleted education successfully',
-            id
+            message: 'delete success'
         });
     } catch (error) {
         next(error)
     }
-
-}
+};
 
 export default {
     getAll,

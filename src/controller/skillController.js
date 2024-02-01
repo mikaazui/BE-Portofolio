@@ -15,24 +15,19 @@ const getAll = async (req, res, next) => {
 
   } catch (error) {
     next(error)
-
   }
-
-}
+};
 
 const getSkillByCategory = async (req, res, next) => {
   const data = await handleSkillByCategory()
 
   res.status(200).json(data);
 
-}
+};
 
 const handleSkillByCategory = async (data) => {
   const skill = await Prisma.skillCategory.findMany({
-    include: {
-      Skill: true
-    },
-    orderBy: { title: 'asc' }
+    include: { Skill: true }, orderBy: { title: 'asc' }
   });
   return skill
 }
@@ -52,9 +47,7 @@ const get = async (req, res, next) => {
 
 
     res.status(200).json({
-      message: 'berhasil masuk ke halaman skill (berdasakan id)',
       id, data
-
     });
   } catch (error) {
     next(error)
@@ -76,10 +69,8 @@ const post = async (req, res, next) => {
       data: insert_data
     })
     res.status(200).json({
-      message: 'berhasil masuk ke halaman skills',
       data: skill_data
-    })
-
+    });
   } catch (error) {
     next(error)
   }
@@ -100,7 +91,6 @@ const put = async (req, res, next) => {
 
     // handle not found
     if (!currentSkill) throw new ResponseError(404, `skill ${id} not found`);
-
 
     //handle category
     const category_id = await skillService.create_or_find_skill_category(skill.category);
@@ -127,7 +117,7 @@ const put = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
-}
+};
 
 const remove = async (req, res, next) => {
   try {

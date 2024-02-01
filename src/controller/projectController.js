@@ -52,7 +52,7 @@ const getByPage = async (page, limit) => {
 
     const data = await Prisma.project.findMany({
         take: limit,
-        include: { photos: true, skills: {include: {Skill: true}} },
+        include: { photos: true, skills: { include: { Skill: true } } },
         orderBy: { startDate: 'asc' },
         skip
     });
@@ -107,7 +107,7 @@ const post = async (req, res, next) => {
             return {
                 skillId: s
             }
-        })
+        });
 
         const data = await Prisma.project.create({
             data: {
@@ -117,24 +117,15 @@ const post = async (req, res, next) => {
                     createMany: { data: skills }
                 },
             },
-            include: { photos: true,  skills: {include: {Skill: true}} },
-
-
+            include: { photos: true, skills: { include: { Skill: true } } },
         });
-        formatData(data)
-        console.log('data skills====')
-        console.log(skills)
-
-
-
-        res.status(200).json({
-            data
-        })
+        res.status(200).json(data)
 
     } catch (error) {
         next(error)
-    }
+    };
 
+    ;
 }
 
 const put = async (req, res, next) => {
@@ -174,10 +165,8 @@ const put = async (req, res, next) => {
         const newPhotos = fileService.getUploadedPhotos(req)
 
         const skills = project.skills.map(s => {
-            return {
-                skillId: s
-            }
-        })
+            return { skillId: s }
+        });
         delete project.skills;
 
         //update blog + delete photo yang tidak dipertahankan
@@ -199,7 +188,7 @@ const put = async (req, res, next) => {
                     createMany: { data: skills } //simpan ulang, data hasil mapping
                 },
             },
-            include: { photos: true,  skills: {include: {Skill: true}} },
+            include: { photos: true, skills: { include: { Skill: true } } },
         })
         formatData(data)
         res.status(200).json({
@@ -211,7 +200,7 @@ const put = async (req, res, next) => {
     }
 
 }
-
+//TODO bikin method hapus photo
 const remove = async (req, res, next) => {
     try {
         let id = req.params.id;

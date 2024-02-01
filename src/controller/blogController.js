@@ -168,22 +168,13 @@ const put = async (req, res, next) => {
         const data = await Prisma.blog.update({
             where: { id },
             data: {
-                ...blog,
-                photos: {
-                    deleteMany: {
-                        id: {
-                            notIn: keepPhotos
-                        }
-                    },
-                    create: newPhotos
-                }
+                ...blog, photos: { deleteMany: { id: { notIn: keepPhotos } }, create: newPhotos }
             },
             include: { photos: true }
         })
         formatData(data)
 
         res.status(200).json({
-            message: `Blog ${id} updated successfully`,
             id,
             data
         })
@@ -210,27 +201,18 @@ const updateBlogTitle = async (req, res, next) => {
             where: { id },
             select: { id: true }
         })
-
         if (!currentBlog) throw new ResponseError(404, `blog ${id} not found`)
-
         //execution (patch)
-
         const data = await Prisma.blog.update({
             where: { id },
-            title,
+            data: { title },
             include: { photos: true }
         })
 
-        res.status(200).json({
-            message: `Blog ${id} updated successfully`,
-            id,
-            data
-        });
+        res.status(200).json(data);
     } catch (error) {
         next(error)
-
     }
-
 }
 
 const remove = async (req, res, next) => {
@@ -248,7 +230,7 @@ const remove = async (req, res, next) => {
         await Prisma.blog.delete({ where: { id } })
 
         res.status(200).json({
-            message: 'deleted blog successfully',
+            message: 'delete successs',
             id
         })
 
