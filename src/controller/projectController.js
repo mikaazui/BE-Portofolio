@@ -1,24 +1,24 @@
-import { Prisma } from "../application/prisma.js"
-import { Validate } from "../application/validate.js"
-import { ResponseError } from "../error/responseError.js"
-import fileService from "../services/fileService.js"
-import { isID } from "../validation/mainValidation.js"
-import { isProject } from "../validation/projectValidation.js"
+import { Prisma } from "../application/prisma.js";
+import { Validate } from "../application/validate.js";
+import { ResponseError } from "../error/responseError.js";
+import fileService from "../services/fileService.js";
+import { isID } from "../validation/mainValidation.js";
+import { isProject } from "../validation/projectValidation.js";
 import dayjs from 'dayjs';
 const formatData = (project) => {
-    const startDate = project.startDate
-    const endDate = project.endDate
-    project.readableStartDate = dayjs(startDate).format('MMMM YYYY')
+    const startDate = project.startDate;
+    const endDate = project.endDate;
+    project.readableStartDate = dayjs(startDate).format('MMMM YYYY');
     //endate
-    project.readableEndDate = dayjs(endDate).format('MMMM YYYY')
+    project.readableEndDate = dayjs(endDate).format('MMMM YYYY');
     if (endDate == null) {
-        project.readableEndDate = 'Present'
+        project.readableEndDate = 'Present';
     } else {
-        project.readableEndDate = dayjs(endDate).format('MMMM YYYY')
-    }
+        project.readableEndDate = dayjs(endDate).format('MMMM YYYY');
+    };
 
     const skills = project.skills.map(projectSkill => {
-        return projectSkill.Skill
+        return projectSkill.Skill;
     })
     project.skills = skills;
 };
@@ -26,11 +26,11 @@ const getAll = async (req, res, next) => {
 
     try {
         //page
-        const page = parseInt(req.query.page) || 1
+        const page = parseInt(req.query.page) || 1;
 
         //limit
-        const limit = parseInt(req.query.limit) || 10
-        const { data, total } = await getByPage(page, limit)
+        const limit = parseInt(req.query.limit) || 10;
+        const { data, total } = await getByPage(page, limit);
         const maxPage = Math.ceil(total / limit);
 
         res.status(200).json({
@@ -42,8 +42,8 @@ const getAll = async (req, res, next) => {
 
     }
     catch (error) {
-        next()
-    }
+        next();
+    };
 };
 
 const getByPage = async (page, limit) => {
@@ -57,22 +57,22 @@ const getByPage = async (page, limit) => {
         skip
     });
     for (const project of data) {
-        formatData(project)
-    }
+        formatData(project);
+    };
     //get total data
-    const total = await Prisma.project.count()
+    const total = await Prisma.project.count();
     return {
         data,
         total
-    }
-}
+    };
+};
 
 
 
 const get = async (req, res, next) => {
     try {
-        let id = req.params.id
-        id = Validate(isID, id)
+        let id = req.params.id;
+        id = Validate(isID, id);
 
         const project = await Prisma.project.findUnique({
             where: { id },
@@ -88,9 +88,9 @@ const get = async (req, res, next) => {
 
     } catch (error) {
         next(error)
-    }
+    };
 
-}
+};
 
 const post = async (req, res, next) => {
     try {
@@ -125,8 +125,8 @@ const post = async (req, res, next) => {
         next(error)
     };
 
-    ;
-}
+    
+};
 
 const put = async (req, res, next) => {
     try {
@@ -146,17 +146,17 @@ const put = async (req, res, next) => {
 
         const currentPhotos = currentProject.photos.map(photo => photo.id)
         const idYangDipertahankan = project.photos || []; //deafult array kosong []
-        console.log('currentPhotos')
-        console.log(currentPhotos)
+        console.log('currentPhotos');
+        console.log(currentPhotos);
         //filter photo yang di pertahankan
 
         //ambil photo yang tidak dipertahankan
         const keepPhotos = currentPhotos.filter(idPhoto => idYangDipertahankan.includes(idPhoto));
         const photos_to_be_removed = currentProject.photos.filter(idPhoto => !idYangDipertahankan.includes(idPhoto));
-        console.log('keepPhotos')
-        console.log(keepPhotos)
-        console.log('photos_to_be_removed')
-        console.log(photos_to_be_removed)
+        console.log('keepPhotos');
+        console.log(keepPhotos);
+        console.log('photos_to_be_removed');
+        console.log(photos_to_be_removed);
         //update blog
         // data yang mau diupdate
         //hapus variable photo
@@ -166,7 +166,7 @@ const put = async (req, res, next) => {
         //create photo baru
         //buang photo ya gitdak dipertahankan
         //simpan photo baru
-        const newPhotos = fileService.getUploadedPhotos(req)
+        const newPhotos = fileService.getUploadedPhotos(req);
         let skills = [];
         if (project.skills) {
             skills = project.skills.map(s => {
@@ -200,7 +200,7 @@ const put = async (req, res, next) => {
         });
 
         for (const photo of currentProject.photos) {
-            await fileService.removeFile(photo.path)
+            await fileService.removeFile(photo.path);
         }
 
         formatData(data)
@@ -209,8 +209,8 @@ const put = async (req, res, next) => {
         });
 
     } catch (error) {
-        next(error)
-    }
+        next(error);
+    };
 
 };
 //TODO bikin method hapus photo
@@ -224,12 +224,12 @@ const remove = async (req, res, next) => {
             include: { photos: true }
         });
 
-        if (!currentProject) throw new ResponseError(404, `project ${id} not found`)
+        if (!currentProject) throw new ResponseError(404, `project ${id} not found`);
 
 
         for (const photo of currentBlog.photos) {
-            await fileService.removeFile(photo.path)
-        }
+            await fileService.removeFile(photo.path);
+        };
         //delete execution
 
         await Prisma.project.delete({
@@ -240,10 +240,10 @@ const remove = async (req, res, next) => {
         });
 
     } catch (error) {
-        next(error)
-    }
+        next(error);
+    };
 
-}
+};
 
 export default {
     get,
@@ -252,4 +252,4 @@ export default {
     post,
     put,
     remove
-}
+};
