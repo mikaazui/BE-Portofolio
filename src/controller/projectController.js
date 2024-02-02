@@ -1,9 +1,9 @@
-import { Prisma } from "../application/prisma.js";
-import { Validate } from "../application/validate.js";
-import { ResponseError } from "../error/responseError.js";
-import fileService from "../services/fileService.js";
-import { isID } from "../validation/mainValidation.js";
-import { isProject } from "../validation/projectValidation.js";
+import { Prisma } from '../application/prisma.js';
+import { Validate } from '../application/validate.js';
+import { ResponseError } from '../error/responseError.js';
+import fileService from '../services/fileService.js';
+import { isID } from '../validation/mainValidation.js';
+import { isProject } from '../validation/projectValidation.js';
 import dayjs from 'dayjs';
 const formatData = (project) => {
     const startDate = project.startDate;
@@ -15,11 +15,11 @@ const formatData = (project) => {
         project.readableEndDate = 'Present';
     } else {
         project.readableEndDate = dayjs(endDate).format('MMMM YYYY');
-    };
+    }
 
     const skills = project.skills.map(projectSkill => {
         return projectSkill.Skill;
-    })
+    });
     project.skills = skills;
 };
 const getAll = async (req, res, next) => {
@@ -43,7 +43,7 @@ const getAll = async (req, res, next) => {
     }
     catch (error) {
         next();
-    };
+    }
 };
 
 const getByPage = async (page, limit) => {
@@ -58,7 +58,7 @@ const getByPage = async (page, limit) => {
     });
     for (const project of data) {
         formatData(project);
-    };
+    }
     //get total data
     const total = await Prisma.project.count();
     return {
@@ -80,33 +80,33 @@ const get = async (req, res, next) => {
         });
 
         //handle not found
-        if (project == null) throw new ResponseError(404, `project ${id} not found`)
-        formatData(project)
+        if (project == null) throw new ResponseError(404, `project ${id} not found`);
+        formatData(project);
         res.status(200).json({
             project
         });
 
     } catch (error) {
-        next(error)
-    };
+        next(error);
+    }
 
 };
 
 const post = async (req, res, next) => {
     try {
         //mengumpulkan photo path
-        const photos = fileService.getUploadedPhotos(req)
+        const photos = fileService.getUploadedPhotos(req);
 
         let project = req.body;
-        project = Validate(isProject, project)
+        project = Validate(isProject, project);
 
-        console.log(photos)
-        console.log(project)
+        console.log(photos);
+        console.log(project);
 
         const skills = project.skills.map(s => {
             return {
                 skillId: s
-            }
+            };
         });
 
         const data = await Prisma.project.create({
@@ -119,11 +119,11 @@ const post = async (req, res, next) => {
             },
             include: { photos: true, skills: { include: { Skill: true } } },
         });
-        res.status(200).json(data)
+        res.status(200).json(data);
 
     } catch (error) {
-        next(error)
-    };
+        next(error);
+    }
 
     
 };
@@ -133,8 +133,8 @@ const put = async (req, res, next) => {
         let project = req.body;
         let id = req.params.id;
 
-        project = Validate(isProject, project)
-        id = Validate(isID, id)
+        project = Validate(isProject, project);
+        id = Validate(isID, id);
 
         const currentProject = await Prisma.project.findUnique({
             where: { id: id },
@@ -144,7 +144,7 @@ const put = async (req, res, next) => {
 
         if (!currentProject) throw new ResponseError(404, `project ${id} not found`);
 
-        const currentPhotos = currentProject.photos.map(photo => photo.id)
+        const currentPhotos = currentProject.photos.map(photo => photo.id);
         const idYangDipertahankan = project.photos || []; //deafult array kosong []
         console.log('currentPhotos');
         console.log(currentPhotos);
@@ -170,9 +170,9 @@ const put = async (req, res, next) => {
         let skills = [];
         if (project.skills) {
             skills = project.skills.map(s => {
-                return { skillId: s }
+                return { skillId: s };
             });
-        };
+        }
 
 
         delete project.skills;
@@ -203,14 +203,14 @@ const put = async (req, res, next) => {
             await fileService.removeFile(photo.path);
         }
 
-        formatData(data)
+        formatData(data);
         res.status(200).json({
             data
         });
 
     } catch (error) {
         next(error);
-    };
+    }
 
 };
 //TODO bikin method hapus photo
@@ -227,9 +227,9 @@ const remove = async (req, res, next) => {
         if (!currentProject) throw new ResponseError(404, `project ${id} not found`);
 
 
-        for (const photo of currentBlog.photos) {
+        for (const photo of currentProject.photos) {
             await fileService.removeFile(photo.path);
-        };
+        }
         //delete execution
 
         await Prisma.project.delete({
@@ -241,7 +241,7 @@ const remove = async (req, res, next) => {
 
     } catch (error) {
         next(error);
-    };
+    }
 
 };
 
