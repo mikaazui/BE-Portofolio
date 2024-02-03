@@ -1,13 +1,13 @@
-import { Prisma } from "../application/prisma.js";
-import { Validate } from "../application/validate.js";
-import fileService from "../services/fileService.js";
-import { isProfile } from "../validation/profileValidation.js";
-import projectController from "./projectController.js";
-import blogController from "./blogController.js";
+import { Prisma } from '../application/prisma.js';
+import { Validate } from '../application/validate.js';
+import fileService from '../services/fileService.js';
+import { isProfile } from '../validation/profileValidation.js';
+import projectController from './projectController.js';
+import blogController from './blogController.js';
 import fs from 'fs/promises';
-import educationController from "./educationController.js";
-import experienceController from "./experienceController.js";
-import skillController from "./skillController.js";
+import educationController from './educationController.js';
+import experienceController from './experienceController.js';
+import skillController from './skillController.js';
 import dayjs from 'dayjs';
 const get = async (req, res) => {
     try {
@@ -16,11 +16,11 @@ const get = async (req, res) => {
         //if ada > kirim data asli
         if (data) {
             res.status(200).json(data);
-        };
+        }
     } catch (error) {
         next(error);
-    };
-}
+    }
+};
 
 const put = async (req, res, next) => {
     try {
@@ -38,8 +38,8 @@ const put = async (req, res, next) => {
 
         //validate
         data = Validate(isProfile, data);
-        console.log('profile====================')
-        console.log(data)
+        console.log('profile====================');
+        console.log(data);
         // throw new Error ('test')
 
         let dataProfile = {};
@@ -60,8 +60,8 @@ const put = async (req, res, next) => {
                 data
             });
             //hapus poto lama
-            const avatar_lama = profile.avatar
-            const avatar_baru = dataProfile.avatar
+            const avatar_lama = profile.avatar;
+            const avatar_baru = dataProfile.avatar;
             if (avatar_lama) {
                 if (avatar_lama != avatar_baru) {
                     await fileService.removeFile(avatar_lama);
@@ -74,50 +74,50 @@ const put = async (req, res, next) => {
         res.status(200).json({
             message: 'berhasil update data profile secara keseluruhan bedasarkan id',
             data: profile
-        })
+        });
 
 
     } catch (error) {
         //jika error dan ada file > hapus file
         if (req.file) {
             //handle buang file
-            fileService.removeFile(req.file.path)
+            fileService.removeFile(req.file.path);
 
         }
 
-        next(error)
+        next(error);
     }
 };
 
 const portofolio = async (req, res, next) => {
     try {
         //ambil data profile
-        const profile = await getProfile()
+        const profile = await getProfile();
         //extract variable data > variable project
         //menghasilkan variable project
 
         //ambil data experience
-        const experiences = await experienceController.getExperiences()
+        const experiences = await experienceController.getExperiences();
         //ambil data education
-        const educations = await educationController.getEducations()
+        const educations = await educationController.getEducations();
         //ambil data skill by category
-        const skills = await skillController.handleSkillByCategory()
+        const skills = await skillController.handleSkillByCategory();
 
         //ambil data project // 4 data saja
-        const { data: projects } = await projectController.getByPage(1, 4)
+        const { data: projects } = await projectController.getByPage(1, 4);
         //ambil data blog
-        const { data: blogs } = await blogController.getByPage(1, 4)
+        const { data: blogs } = await blogController.getByPage(1, 4);
 
         //hitung tahun pengalaman kerja
         //ambil project pertama array terakhir
-        const firstProject = projects.findLast(p => p.id)
+        const firstProject = projects.findLast(p => p.id);
         const firstProjectDate = dayjs(firstProject.startDate);
-        profile.year_of_experience = dayjs().diff(firstProjectDate, "year")
-        profile.month_of_experience = dayjs().diff(firstProjectDate, "month")
+        profile.year_of_experience = dayjs().diff(firstProjectDate, 'year');
+        profile.month_of_experience = dayjs().diff(firstProjectDate, 'month');
 
 
         //hitung jumlah project
-        profile.count_project = projects.length
+        profile.count_project = projects.length;
 
         res.status(200).json({
                 profile,
@@ -127,13 +127,13 @@ const portofolio = async (req, res, next) => {
                 projects,
                 blogs
 
-        })
+        });
 
     } catch (error) {
-        next(error)
+        next(error);
     }
 
-}
+};
 
 const getProfile = async (req, res, next) => {
     try {
@@ -152,13 +152,13 @@ const getProfile = async (req, res, next) => {
                 address: '-',
                 country: '-',
                 city: '-'
-            }
-        };
+            };
+        }
 
         return profile;
 
     } catch (error) {
-        next(error)
+        next(error);
     }
 
 };
@@ -170,4 +170,4 @@ export default {
     put,
     portofolio
 
-}
+};

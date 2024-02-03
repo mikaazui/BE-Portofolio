@@ -82,9 +82,7 @@ const get = async (req, res, next) => {
         //handle not found
         if (project == null) throw new ResponseError(404, `project ${id} not found`);
         formatData(project);
-        res.status(200).json({
-            project
-        });
+        res.status(200).json(project);
 
     } catch (error) {
         next(error);
