@@ -100,6 +100,9 @@ const post = async (req, res, next) => {
 
         console.log(photos);
         console.log(project);
+        if (!project.skills) {
+            project.skills = [];
+        }
 
         const skills = project.skills.map(s => {
             return {

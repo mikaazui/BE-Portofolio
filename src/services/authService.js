@@ -11,7 +11,14 @@ const createToken = (res, email, age = process.env.SESSION_AGE) => {
         jwtSecretToken,
         { expiresIn: age }
     );
-    res.cookie("token", token)
+
+    const maxAge = 24 * 60 * 60 * 1000
+    let cookieConfig = {
+        httpOnly: true,
+        maxAge
+    };
+
+    res.cookie("token", token, cookieConfig)
     return token
 
 }

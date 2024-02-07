@@ -18,14 +18,14 @@ const login = async (req, res, next) => {
     });
     //check email
     if (!user) {
-      throw new ResponseError(400, "Email  is Invalid");
+      throw new ResponseError(400, "Email is Invalid")
     }
 
     //check password/compare password
     const dbPass = user.password;
     const checkPass = await bcrypt.compare(password, dbPass);
 
-    if (!checkPass) throw new ResponseError(400, " Password is Invalid");
+    if (!checkPass) throw new ResponseError(400, "Password is Invalid");
 
     //create token
     const token = authService.createToken(res, email);
