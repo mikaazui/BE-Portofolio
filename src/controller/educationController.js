@@ -7,13 +7,13 @@ import dayjs from 'dayjs';
 const formatData = (education) => {
     const startYear = education.startYear;
     const endYear = education.endYEar;
-    education.readableStartDate = dayjs(startYear).format('MMMM YYYY');
+    education.readableStartYear = dayjs(startYear).format('MMMM YYYY');
     //endate
-    education.readableEndDate = dayjs(endYear).format('MMMM YYYY');
+    education.readableEndYear = dayjs(endYear).format('MMMM YYYY');
     if (endYear == null) {
-        education.readableEndDate = 'Present';
+        education.readableEndYear = 'Present';
     } else {
-        education.readableEndDate = dayjs(endYear).format('MMMM YYYY');
+        education.readableEndYear = dayjs(endYear).format('MMMM YYYY');
     }
 };
 const getAll = async (req, res) => {
