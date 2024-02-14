@@ -51,7 +51,6 @@ app.use('/uploads', async (req, res) => {
 
 });
 
-
 //taruh paling atas
 //public api
 app.use(routerPublic);
