@@ -95,7 +95,6 @@ const portofolio = async (req, res, next) => {
     const educations = await educationController.getEducations();
     //ambil data skill by category
     const skills = await skillController.handleSkillByCategory();
-
     //ambil data project // 4 data saja
     const { data: projects } = await projectController.getByPage(1, 4);
     //ambil data blog
