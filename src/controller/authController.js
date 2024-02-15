@@ -33,9 +33,7 @@ const login = async (req, res, next) => {
     //update token
     const data = await authService.updateUserToken(email, token);
     //ambil datauser
-    res.status(200).json({
-      data
-    });
+    res.status(200).json(data);
   } catch (error) {
     next(error);
   }
