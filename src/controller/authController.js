@@ -63,7 +63,24 @@ const logout = async (req, res, next) => {
   }
 };
 
+const getUser = async (req, res, next) => {
+  try {
+    const user = await Prisma.user.findFirstOrThrow({
+      select: {
+        name: true,
+        email: true,
+      }
+    });
+
+    res.status(200).json(user);
+
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   login,
   logout,
+  getUser,
 };
