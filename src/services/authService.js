@@ -14,7 +14,7 @@ const createToken = (res, email, age = process.env.SESSION_AGE) => {
 
     const maxAge = 24 * 60 * 60 * 1000
     let cookieConfig = {
-        httpOnly: true,
+        // httpOnly: true,
         maxAge
     };
 
