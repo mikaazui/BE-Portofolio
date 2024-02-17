@@ -18,8 +18,9 @@ const createToken = (res, email, age = process.env.SESSION_AGE) => {
         maxAge
     };
 
-    res.cookie("token", token, cookieConfig)
-    return token
+    res.cookie("token", token, cookieConfig);
+    console.log(token)
+    return token;
 
 }
 const updateUserToken = async (email, token) => {

@@ -2,9 +2,11 @@ import dotenv from "dotenv";
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
-import { loginValidate } from "../validation/authValidate.js";
+import { loginValidate, updateUserValidation } from "../validation/authValidate.js";
 import bcrypt from "bcrypt";
 import authService from "../services/authService.js";
+import Joi from "joi";
+import { ESLint } from "eslint";
 
 const login = async (req, res, next) => {
   try {
@@ -18,7 +20,7 @@ const login = async (req, res, next) => {
     });
     //check email
     if (!user) {
-      throw new ResponseError(400, "Email is Invalid")
+      throw new ResponseError(400, "Email is Invalid");
     }
 
     //check password/compare password
@@ -69,11 +71,42 @@ const getUser = async (req, res, next) => {
       select: {
         name: true,
         email: true,
-      }
+      },
     });
 
     res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
 
+const editPass = async (req, res, next) => {
+  try {
+    let data = req.body;
+    //validate
+    data = Validate(updateUserValidation, data);
+
+    //remove confirm password
+    delete data.confirm_password;
+    //update pass to hash
+    data.password = await bcrypt.hash(data.password, 10);
+
+    const currentUser = await Prisma.user.findFirst()
+
+    console.log(currentUser);
+
+    const updatedUser = await Prisma.user.update({
+      where: {email: currentUser.email},
+      data,
+      select: {
+        name: true,
+        email: true
+      }
+    });
+      res.status(200).json(updatedUser)
+
+    //check current password
+    //check new password & confirm password <- password.value ? newPassword.value
   } catch (error) {
     next(error);
   }
@@ -83,4 +116,5 @@ export default {
   login,
   logout,
   getUser,
+  editPass,
 };

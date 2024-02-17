@@ -1,5 +1,3 @@
-
-
 export const Validate = (schema, data, res) => {
     const result = schema.validate(data) 
 
@@ -9,3 +7,4 @@ export const Validate = (schema, data, res) => {
     return result.value
    }
 }
+

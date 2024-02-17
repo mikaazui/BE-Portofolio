@@ -4,6 +4,7 @@ export const routeAuth = express.Router();
 
 //separator start logout
 routeAuth.delete('/logout', authController.logout)
-
 //get data user
 routeAuth.get('/user', authController.getUser)
+//put data user
+routeAuth.put('/user', authController.editPass)
