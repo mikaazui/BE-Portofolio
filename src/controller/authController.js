@@ -2,11 +2,12 @@ import dotenv from "dotenv";
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import { ResponseError } from "../error/responseError.js";
-import { loginValidate, updateUserValidation } from "../validation/authValidate.js";
+import {
+  loginValidate,
+  updateUserValidation,
+} from "../validation/authValidate.js";
 import bcrypt from "bcrypt";
 import authService from "../services/authService.js";
-import Joi from "joi";
-import { ESLint } from "eslint";
 
 const login = async (req, res, next) => {
   try {
@@ -70,7 +71,7 @@ const getUser = async (req, res, next) => {
     const user = await Prisma.user.findFirstOrThrow({
       select: {
         name: true,
-        email: true,
+        email: true
       },
     });
 
@@ -91,19 +92,19 @@ const editPass = async (req, res, next) => {
     //update pass to hash
     data.password = await bcrypt.hash(data.password, 10);
 
-    const currentUser = await Prisma.user.findFirst()
+    const currentUser = await Prisma.user.findFirst();
 
     console.log(currentUser);
 
     const updatedUser = await Prisma.user.update({
-      where: {email: currentUser.email},
+      where: { email: currentUser.email },
       data,
       select: {
         name: true,
-        email: true
-      }
+        email: true,
+      },
     });
-      res.status(200).json(updatedUser)
+    res.status(200).json(updatedUser);
 
     //check current password
     //check new password & confirm password <- password.value ? newPassword.value
