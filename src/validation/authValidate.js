@@ -8,6 +8,7 @@ const loginValidate = Joi.object({
 const updateUserValidation = Joi.object({
   name: Joi.string().required().label("Name"),
   email: Joi.string().email().required().label("Email"),
+  current_password: Joi.string().min(4).required().label("Current Password"),
   password: Joi.string().min(4).required().label("Password"),
   confirm_password: Joi.string()
     .min(4)
