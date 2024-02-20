@@ -10,6 +10,7 @@ export const errorMid = ((error, req, res, next) => {
       res.status(error.status).json({
         message: error.message
       }).end();
+      console.log(error)
       return;
     }
     //joi error
@@ -17,6 +18,7 @@ export const errorMid = ((error, req, res, next) => {
       res.status(400).json({
         message: error.message
       }).end();
+      console.log(error)
       return;
     }
     //server error

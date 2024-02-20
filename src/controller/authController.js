@@ -9,7 +9,7 @@ import {
 import bcrypt from "bcrypt";
 import authService from "../services/authService.js";
 
-const login = async (req, res, next) => { 
+const login = async (req, res, next) => {
   try {
     //ambil data > email && password
     let loginData = req.body;
@@ -66,12 +66,12 @@ const logout = async (req, res, next) => {
   }
 };
 
-const getUser = async (req, res, next) => { 
+const getUser = async (req, res, next) => {
   try {
     const user = await Prisma.user.findFirstOrThrow({
       select: {
         name: true,
-        email: true
+        email: true,
       },
     });
 
@@ -88,25 +88,29 @@ const editPass = async (req, res, next) => {
     data = Validate(updateUserValidation, data);
 
     const currentUser = await Prisma.user.findFirstOrThrow();
-    const checkPass = await bcrypt.compare( data.current_password ,currentUser.password );
-    // TODO ganti Current Password is invalid > password is invalid
-    if (!checkPass) throw new ResponseError(400, "Current Password is Invalid");
-    
-    //remove confirm password
-    delete data.current_password;
-    delete data.confirm_password;
-    //update pass to hash
-    data.password = await bcrypt.hash(data.password, 10);
+    //jika data.passwordnya ada, maka update password
+    if (data.current_password) {
+      const checkPass = await bcrypt.compare(
+        data.current_password,
+        currentUser.password
+      );
+      // TODO ganti Current Password is invalid > password is invalid
+      if (!checkPass)
+        throw new ResponseError(400, "Current Password is Invalid");
 
-
-    console.log(currentUser);
+      //remove confirm password
+      delete data.current_password;
+      delete data.confirm_password;
+      //update pass to hash
+      data.password = await bcrypt.hash(data.password, 10);
+      console.log(currentUser);
+    }
 
     const updatedUser = await Prisma.user.update({
       where: { email: currentUser.email },
       data,
       select: {
         name: true,
-        
         email: true,
       },
     });
