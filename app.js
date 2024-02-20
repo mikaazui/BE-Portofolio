@@ -32,7 +32,8 @@ app.use(logging);
 fileService.createFolder('./uploads');
 //create handle cors
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: 'http://localhost:3000',
+  credentials: true
 }));
 
 //set static files
@@ -49,7 +50,6 @@ app.use('/uploads', async (req, res) => {
   };
 
 });
-
 
 //taruh paling atas
 //public api
