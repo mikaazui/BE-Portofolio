@@ -5,8 +5,8 @@ const isString25 = joi.string().max(25).trim()
 const isString100 = joi.string().max(100).trim()
 const isString255 = joi.string().max(255).trim()
 const isYear = joi.number().positive()
-const isText = joi.string().trim()
-const isURL = joi.string().uri().trim()
+const isText = joi.string().trim().allow(null, '')
+const isURL = joi.string().uri().trim().allow(null, '');
 
 export {
     isID,
