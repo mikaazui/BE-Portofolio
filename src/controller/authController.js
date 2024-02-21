@@ -85,7 +85,7 @@ const editPass = async (req, res, next) => {
   try {
     let data = req.body;
     //validate
-    data = Validate(updateUserValidation, data);
+  data = Validate(updateUserValidation, data);
 
     const currentUser = await Prisma.user.findFirstOrThrow();
     //jika data.passwordnya ada, maka update password
