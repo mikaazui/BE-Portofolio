@@ -53,7 +53,7 @@ const put = async (req, res, next) => {
     }
 
     console.log("profile====================");
-    console.log(data);
+    console.log(data); 
 
     //hapus poto lama
     const avatar_lama = profile.avatar;
@@ -133,6 +133,8 @@ const getProfile = async (req, res, next) => {
     //if kosong > kirim data dummy
     if (!profile) {
       //buat data dummy disini
+    // TODO kerjain default value masing2 data jika kosong
+
       profile = {
         email: "dummyexample@.com",
         firstName: "-",
@@ -142,6 +144,12 @@ const getProfile = async (req, res, next) => {
         address: "-",
         country: "-",
         city: "-",
+        website: null,
+        instagram: null,
+        github: null,
+        linkedin: null,
+        discord: null,
+        twitter: null
       };
     }
 
