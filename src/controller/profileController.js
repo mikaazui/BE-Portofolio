@@ -65,8 +65,7 @@ const put = async (req, res, next) => {
     };
 
     res.status(200).json({
-      message: "berhasil update data profile secara keseluruhan bedasarkan id",
-      data: profile,
+      data: profile
     });
   } catch (error) {
     //jika error dan ada file > hapus file
