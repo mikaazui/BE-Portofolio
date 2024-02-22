@@ -31,9 +31,9 @@ const isCreateProfile = joi.object({
   ...nonRequired,
 });
 const isUpdateProfile = joi.object({
-  firstName: isString100.required().label("Firstname"),
-  lastName: isString100.required().label("Lastname"),
-  dob: joi.date().less("now").required().label("DOB"),
+  firstName: isString100.label("Firstname"),
+  lastName: isString100.label("Lastname"),
+  dob: joi.date().less("now").label("DOB"),
   ...nonRequired,
 });
 
