@@ -1,8 +1,8 @@
-import joi from 'joi';
+import Joi from 'joi';
 import { isString100, isYear } from './mainValidation.js';
 
 
-const isEducation = joi.object({
+const isEducation = Joi.object({
     insituitionName: isString100.required().trim().label('Institution Name'),
     degree: isString100.trim().label('Degree'),
     major: isString100.trim().allow('').label('Major'),
