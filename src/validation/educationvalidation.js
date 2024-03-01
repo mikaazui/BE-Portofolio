@@ -7,8 +7,8 @@ const isEducation = Joi.object({
     degree: isString100.trim().label('Degree'),
     major: isString100.trim().allow('').label('Major'),
     city: isString100.trim().label('City'),
-    startYear: isYear.label('Start Date'),
-    endYear: isYear.allow(null, "").label('End Date')
+    startYear: Joi.date().label('Start Date'),
+    endYear: Joi.date().allow(null, "").label('End Date')
 })
 
 export {

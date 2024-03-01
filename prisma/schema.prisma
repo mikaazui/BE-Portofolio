@@ -81,15 +81,15 @@ enum ProjectStatus {
 }
 
 model education {
-  id              Int      @id @default(autoincrement())
-  insituitionName String   @db.VarChar(100)
-  city            String   @db.VarChar(100)
-  startYear       Int      @db.Int
-  endYear         Int?     @db.Int
-  major           String?  @db.VarChar(100)
-  degree          String?  @db.VarChar(100)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @default(now()) @updatedAt
+  id              Int       @id @default(autoincrement())
+  insituitionName String    @db.VarChar(100)
+  city            String    @db.VarChar(100)
+  startYear       DateTime  @default(now())
+  endYear         DateTime? @default(now())
+  major           String?   @db.VarChar(100)
+  degree          String?   @db.VarChar(100)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now()) @updatedAt
 
   @@map("education")
 }
