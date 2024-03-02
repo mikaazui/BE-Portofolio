@@ -28,6 +28,18 @@ const getSkillByCategory = async (req, res, next) => {
   res.status(200).json(data);
 };
 
+const getAllCategory = async (req, res, next) => {
+  try {
+    const data = await Prisma.skillCategory.findMany({
+      orderBy: { title: "asc" },
+    });
+    res.status(200).json(data);
+    
+  } catch (error) {
+    
+  }
+};
+
 const handleSkillByCategory = async (data) => {
   const skill = await Prisma.skillCategory.findMany({
     include: { Skill: true },
@@ -165,4 +177,5 @@ export default {
   post,
   put,
   remove,
+  getAllCategory
 };
