@@ -3,7 +3,7 @@ import { isString100, isYear } from './mainValidation.js';
 
 
 const isEducation = Joi.object({
-    insituitionName: isString100.required().trim().label('Institution Name'),
+    insituitionName: isString100.required().trim().label('Insituition Name'),
     degree: isString100.trim().label('Degree'),
     major: isString100.trim().allow('').label('Major'),
     city: isString100.trim().label('City'),
