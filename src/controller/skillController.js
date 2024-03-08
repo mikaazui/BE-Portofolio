@@ -1,78 +1,96 @@
-import { Prisma } from "../application/prisma.js"
-import { isSkill } from "../validation/skillValidation.js"
-import { Validate } from "../application/validate.js"
-import skillService from "../services/skillService.js"
-import { isID } from "../validation/mainValidation.js"
-import { ResponseError } from "../error/responseError.js"
+import { Prisma } from "../application/prisma.js";
+import { isSkill } from "../validation/skillValidation.js";
+import { Validate } from "../application/validate.js";
+import skillService from "../services/skillService.js";
+import { isID } from "../validation/mainValidation.js";
+import { ResponseError } from "../error/responseError.js";
 
 const getAll = async (req, res, next) => {
   try {
     const data = await Prisma.skill.findMany({
-      include: { category: true }
-    })
+      include: {
+        category: true,
+        _count: {
+          select: { projects: true },
+        },
+      },
+    });
 
     res.status(200).json(data);
-
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
 const getSkillByCategory = async (req, res, next) => {
-  const data = await handleSkillByCategory()
+  const data = await handleSkillByCategory();
 
   res.status(200).json(data);
+};
 
+const getAllCategory = async (req, res, next) => {
+  try {
+    const data = await Prisma.skillCategory.findMany({
+      orderBy: { title: "asc" },
+    });
+    res.status(200).json(data);
+    
+  } catch (error) {
+    
+  }
 };
 
 const handleSkillByCategory = async (data) => {
   const skill = await Prisma.skillCategory.findMany({
-    include: { Skill: true }, orderBy: { title: 'asc' }
+    include: { Skill: true },
+    orderBy: { title: "asc" },
   });
-  return skill
-}
+  return skill;
+};
 
 const get = async (req, res, next) => {
   try {
-    let id = req.params.id
-    id = Validate(isID, id)
+    let id = req.params.id;
+    id = Validate(isID, id);
 
     const data = await Prisma.skill.findUnique({
       where: { id },
-      include: { category: true }
+      include: { category: true },
     });
 
     //handle not found
     if (data == null) throw new ResponseError(404, `blog ${id} not found`);
 
-
     res.status(200).json({
-      id, data
+      id,
+      data,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
 const post = async (req, res, next) => {
   try {
-    let data = req.body
-    data = Validate(isSkill, data)
+    let data = req.body;
+    data = Validate(isSkill, data);
     // const category_id = await create_or_find_skill_category(data.category)
-    const category_id = await skillService.create_or_find_skill_category(data.category);
+    const category_id = await skillService.create_or_find_skill_category(
+      data.category
+    );
     const insert_data = {
       title: data.title,
       svg: data.svg,
-      skillCategoryId: category_id
+      skillCategoryId: category_id,
     };
     const skill_data = await Prisma.skill.create({
-      data: insert_data
-    })
+      data: insert_data,
+    });
     res.status(200).json({
-      data: skill_data
+      data: skill_data,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
@@ -81,28 +99,30 @@ const put = async (req, res, next) => {
     let skill = req.body;
     let id = req.params.id;
     //start validate skill
-    skill = Validate(isSkill, skill)
-    id = Validate(isID, id)
+    skill = Validate(isSkill, skill);
+    id = Validate(isID, id);
 
     const currentSkill = await Prisma.skill.findUnique({
       where: { id },
-      select: { id: true, skillCategoryId: true }
+      select: { id: true, skillCategoryId: true },
     });
 
     // handle not found
     if (!currentSkill) throw new ResponseError(404, `skill ${id} not found`);
 
     //handle category
-    const category_id = await skillService.create_or_find_skill_category(skill.category);
+    const category_id = await skillService.create_or_find_skill_category(
+      skill.category
+    );
 
     const data = {
       title: skill.title,
-      skillCategoryId: category_id
+      skillCategoryId: category_id,
     };
 
     const updatedSkill = await Prisma.skill.update({
       where: { id },
-      data
+      data,
     });
 
     //remove category
@@ -112,10 +132,10 @@ const put = async (req, res, next) => {
 
     res.status(200).json({
       id,
-      updatedSkill
+      updatedSkill,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
@@ -126,16 +146,15 @@ const remove = async (req, res, next) => {
     id = Validate(isID, id);
     const currentSkill = await Prisma.skill.findUnique({
       where: { id },
-      select: { id: true, skillCategoryId: true }
-    }
-    );
+      select: { id: true, skillCategoryId: true },
+    });
 
-    if (!currentSkill) throw new ResponseError(404, `skill ${id} not found`)
+    if (!currentSkill) throw new ResponseError(404, `skill ${id} not found`);
 
     //delete execution
 
     await Prisma.skill.delete({
-      where: { id }
+      where: { id },
     });
     //remove category
     //id category sebelumnya
@@ -145,10 +164,9 @@ const remove = async (req, res, next) => {
     res.status(200).json({
       message: `deleted skill ${id} successfully`,
     });
-
   } catch (error) {
-    next(error)
-  };
+    next(error);
+  }
 };
 
 export default {
@@ -158,5 +176,6 @@ export default {
   get,
   post,
   put,
-  remove
-}
+  remove,
+  getAllCategory
+};

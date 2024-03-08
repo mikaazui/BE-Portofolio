@@ -8,13 +8,13 @@ import dayjs from 'dayjs';
 const formatData = (project) => {
     const startDate = project.startDate;
     const endDate = project.endDate;
-    project.readableStartDate = dayjs(startDate).format('MMMM YYYY');
+    project.readableStartDate = dayjs(startDate).format('DD MMMM YYYY');
     //endate
     project.readableEndDate = dayjs(endDate).format('MMMM YYYY');
     if (endDate == null) {
         project.readableEndDate = 'Present';
     } else {
-        project.readableEndDate = dayjs(endDate).format('MMMM YYYY');
+        project.readableEndDate = dayjs(endDate).format('DD MMMM YYYY');
     }
 
     const skills = project.skills.map(projectSkill => {
@@ -96,7 +96,14 @@ const post = async (req, res, next) => {
         const photos = fileService.getUploadedPhotos(req);
 
         let project = req.body;
+        console.log('project ==============');
+        console.log(project);
         project = Validate(isProject, project);
+
+        //handle emddate
+        if(!project.endDate) {
+            project.endDate = null;
+        }
 
         console.log(photos);
         console.log(project);
@@ -104,11 +111,18 @@ const post = async (req, res, next) => {
             project.skills = [];
         }
 
-        const skills = project.skills.map(s => {
-            return {
-                skillId: s
-            };
-        });
+        //handle no skills
+        let skills = []
+        if(project.skills) {
+            const skills = project.skills.map(s => {
+                return {
+                    skillId: s
+                };
+            });
+
+        }
+        
+        
 
         const data = await Prisma.project.create({
             data: {
@@ -123,6 +137,7 @@ const post = async (req, res, next) => {
         res.status(200).json(data);
 
     } catch (error) {
+        console.log(error)
         next(error);
     }
 
@@ -134,9 +149,13 @@ const put = async (req, res, next) => {
         let project = req.body;
         let id = req.params.id;
 
-        project = Validate(isProject, project);
         id = Validate(isID, id);
 
+        if(!project.endDate) {
+            project.endDate = null;
+        }
+        project = Validate(isProject, project);
+        
         const currentProject = await Prisma.project.findUnique({
             where: { id: id },
             include: { photos: true, skills: true }

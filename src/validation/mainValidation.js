@@ -1,12 +1,12 @@
-import joi from 'joi';
+import Joi from 'joi';
 
-const isID = joi.number().min(1).positive().label("id").required();
-const isString25 = joi.string().max(25).trim()
-const isString100 = joi.string().max(100).trim()
-const isString255 = joi.string().max(255).trim()
-const isYear = joi.number().positive()
-const isText = joi.string().trim()
-const isURL = joi.string().uri().trim()
+const isID = Joi.number().min(1).positive().label("id").required();
+const isString25 = Joi.string().max(25).trim()
+const isString100 = Joi.string().max(100).trim()
+const isString255 = Joi.string().max(255).trim()
+const isYear = Joi.number().positive()
+const isText = Joi.string().trim().allow(null, '')
+const isURL = Joi.string().uri().trim().allow(null, '');
 
 export {
     isID,

@@ -20,12 +20,7 @@ const formatData = (experiences) => {
 const getAll = async (req, res) => {
     const data = await getExperiences()
     if (data) {
-
-        res.status(200).json({
-            message: 'berhasil masuk ke halaman experience (semua data)',
-            data
-        });
-
+        res.status(200).json(data);
     }
 };
 
@@ -52,12 +47,7 @@ const get = async (req, res, next) => {
         if (data == null) throw new ResponseError(404, `experience ${id} not found`)
         formatData(data)
 
-        res.status(200).json({
-            message: 'berhasil masuk ke halaman experiences (berdasakan id)',
-            id,
-            data
-
-        });
+        res.status(200).json({id,data});
     } catch (error) {
         next(error)
     }
@@ -72,10 +62,7 @@ const post = async (req, res, next) => {
         const data = await Prisma.experience.create({ data: experience });
         formatData(data)
 
-        res.status(200).json({
-            message: 'saved to data experience',
-            data
-        })
+        res.status(200).json(data)
 
     } catch (error) {
         next(error)
@@ -102,11 +89,7 @@ const put = async (req, res, next) => {
         })
             formatData(data)
 
-        res.status(200).json({
-            message: `Blog ${id} updated successfully`,
-            id,
-            data
-        })
+        res.status(200).json({id,data})
     } catch (error) {
         next(error)
     }
@@ -126,10 +109,7 @@ const remove = async (req, res, next) => {
         //delete execution
         await Prisma.experience.delete({ where: { id } })
 
-        res.status(200).json({
-            message: 'deleted experience successfully',
-            id
-        })
+        res.status(200).json(id)
 
     } catch (error) {
         next(error)

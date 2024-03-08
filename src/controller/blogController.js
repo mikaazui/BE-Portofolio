@@ -16,8 +16,13 @@ const getAll = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         //limit
         const limit = parseInt(req.query.limit) || 10;
+        //search
+        const search = req.query.search || '';
+
+        console.log(search)
+        
         //ga perlu formatData karena sudah dari getByPagenya
-        const { data, total } = await getByPage(page, limit);
+        const { data, total } = await getByPage(page, limit, search);
         const maxPage = Math.ceil(total / limit);
 
         res.status(200).json({
@@ -31,12 +36,13 @@ const getAll = async (req, res) => {
     }
 };
 
-const getByPage = async (page, limit) => {
+const getByPage = async (page, limit, search = '') => {
     //calculate skip
     const skip = (page - 1) * limit;
-
-
+    
+    
     const data = await Prisma.blog.findMany({
+        where: { title: { contains: search } },
         take: limit,
         skip,
         include: { photos: true },
@@ -44,9 +50,11 @@ const getByPage = async (page, limit) => {
     });
     //di loop karena banyak isinya
     for (const blog of data) { formatData(blog); }
-
+    
     //get total data
-    const total = await Prisma.blog.count();
+    const total = await Prisma.blog.count({
+        where: { title: { contains: search } }
+    });
     return { data, total };
 };
 

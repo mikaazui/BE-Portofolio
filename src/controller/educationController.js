@@ -6,10 +6,9 @@ import { isID } from '../validation/mainValidation.js';
 import dayjs from 'dayjs';
 const formatData = (education) => {
     const startYear = education.startYear;
-    const endYear = education.endYEar;
+    const endYear = education.endYear;
     education.readableStartYear = dayjs(startYear).format('MMMM YYYY');
     //endate
-    education.readableEndYear = dayjs(endYear).format('MMMM YYYY');
     if (endYear == null) {
         education.readableEndYear = 'Present';
     } else {

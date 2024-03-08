@@ -1,7 +1,10 @@
 import { Prisma } from "../application/prisma.js";
 import { Validate } from "../application/validate.js";
 import fileService from "../services/fileService.js";
-import { isProfile } from "../validation/profileValidation.js";
+import {
+  isCreateProfile,
+  isUpdateProfile,
+} from "../validation/profileValidation.js";
 import projectController from "./projectController.js";
 import blogController from "./blogController.js";
 import educationController from "./educationController.js";
@@ -35,41 +38,34 @@ const put = async (req, res, next) => {
       data.avatar = avatar;
     }
 
-    //validate
-    data = Validate(isProfile, data);
-    console.log("profile====================");
-    console.log(data);
-    // throw new Error ('test')
-
     let dataProfile = {};
-    if (!profile) {
-      //jika null > create data baru
-      let dataProfile = await Prisma.profile.create({
-        data,
-      });
-    }
-    if (profile) {
-      //jika ada isinya ? update data yang ada
-      //isi dari hasil update
+    //validate
+    if (profile == null) {
+      data = Validate(isCreateProfile, data);
+      dataProfile = await Prisma.profile.create({ data });
+    } else {
+      data = Validate(isUpdateProfile, data);
       dataProfile = await Prisma.profile.update({
-        where: {
-          email: profile.email,
-        },
+        where: { email: profile.email },
         data,
       });
-      //hapus poto lama
-      const avatar_lama = profile.avatar;
-      const avatar_baru = dataProfile.avatar;
-      if (avatar_lama) {
-        if (avatar_lama != avatar_baru) {
-          await fileService.removeFile(avatar_lama);
-        }
-      }
+      console.log(data)
     }
+
+    console.log("profile====================");
+    console.log(data); 
+
+    //hapus poto lama
+    const avatar_lama = profile.avatar;
+    const avatar_baru = dataProfile.avatar;
+    if (avatar_lama) {
+      if (avatar_lama != avatar_baru) {
+        await fileService.removeFile(avatar_lama);
+      }
+    };
 
     res.status(200).json({
-      message: "berhasil update data profile secara keseluruhan bedasarkan id",
-      data: profile,
+      data: profile
     });
   } catch (error) {
     //jika error dan ada file > hapus file
@@ -136,15 +132,25 @@ const getProfile = async (req, res, next) => {
     //if kosong > kirim data dummy
     if (!profile) {
       //buat data dummy disini
+    // TODO kerjain default value masing2 data jika kosong
+
       profile = {
         email: "dummyexample@.com",
         firstName: "-",
         lastName: "-",
         dob: "1900-01-01",
+        bio: "-",
         job: "-",
         address: "-",
         country: "-",
         city: "-",
+        avatar: null,
+        website: null,
+        instagram: null,
+        github: null,
+        linkedin: null,
+        discord: null,
+        twitter: null
       };
     }
 
