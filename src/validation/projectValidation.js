@@ -5,7 +5,7 @@ export const isProject = Joi.object({
     title: isString255.required(),
     description: isText.required(),
     startDate: Joi.date().less('now').required(),
-    endDate: Joi.date().less('now').allow(''),
+    endDate: Joi.date().less('now').allow(null),
     status: Joi.string().valid('ON_PROGRESS', 'MAINTENANCE', 'COMPLETE'),
     url: isURL.allow(null, ''),
     github: isURL.allow(null, ''),

@@ -96,6 +96,8 @@ const post = async (req, res, next) => {
         const photos = fileService.getUploadedPhotos(req);
 
         let project = req.body;
+        console.log('project ==============');
+        console.log(project);
         project = Validate(isProject, project);
 
         //handle emddate
@@ -135,6 +137,7 @@ const post = async (req, res, next) => {
         res.status(200).json(data);
 
     } catch (error) {
+        console.log(error)
         next(error);
     }
 
@@ -146,9 +149,13 @@ const put = async (req, res, next) => {
         let project = req.body;
         let id = req.params.id;
 
-        project = Validate(isProject, project);
         id = Validate(isID, id);
 
+        if(!project.endDate) {
+            project.endDate = null;
+        }
+        project = Validate(isProject, project);
+        
         const currentProject = await Prisma.project.findUnique({
             where: { id: id },
             include: { photos: true, skills: true }
