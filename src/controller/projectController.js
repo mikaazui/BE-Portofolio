@@ -8,13 +8,13 @@ import dayjs from 'dayjs';
 const formatData = (project) => {
     const startDate = project.startDate;
     const endDate = project.endDate;
-    project.readableStartDate = dayjs(startDate).format('MMMM YYYY');
+    project.readableStartDate = dayjs(startDate).format('DD MMMM YYYY');
     //endate
     project.readableEndDate = dayjs(endDate).format('MMMM YYYY');
     if (endDate == null) {
         project.readableEndDate = 'Present';
     } else {
-        project.readableEndDate = dayjs(endDate).format('MMMM YYYY');
+        project.readableEndDate = dayjs(endDate).format('DD MMMM YYYY');
     }
 
     const skills = project.skills.map(projectSkill => {
@@ -98,17 +98,29 @@ const post = async (req, res, next) => {
         let project = req.body;
         project = Validate(isProject, project);
 
+        //handle emddate
+        if(!project.endDate) {
+            project.endDate = null;
+        }
+
         console.log(photos);
         console.log(project);
         if (!project.skills) {
             project.skills = [];
         }
 
-        const skills = project.skills.map(s => {
-            return {
-                skillId: s
-            };
-        });
+        //handle no skills
+        let skills = []
+        if(project.skills) {
+            const skills = project.skills.map(s => {
+                return {
+                    skillId: s
+                };
+            });
+
+        }
+        
+        
 
         const data = await Prisma.project.create({
             data: {

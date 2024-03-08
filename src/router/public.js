@@ -38,3 +38,4 @@ routerPublic.get('/experiences', experienceController.getAll); //get all
 routerPublic.get('/experience/:id', experienceController.get) //get by id
 //skill
 routerPublic.get('/skill_categories', skillController.getAllCategory)//get all
+
