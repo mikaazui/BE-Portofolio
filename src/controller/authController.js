@@ -5,6 +5,7 @@ import { ResponseError } from "../error/responseError.js";
 import {
   loginValidate,
   updateUserValidation,
+  createFirstUserValidation,
 } from "../validation/authValidate.js";
 import bcrypt from "bcrypt";
 import authService from "../services/authService.js";
@@ -120,12 +121,60 @@ const editPass = async (req, res, next) => {
     //check new password & confirm password <- password.value ? newPassword.value
   } catch (error) {
     next(error);
+    next(error);
+  }
+};
+
+const createFirstUser = async (req, res, next) => {
+  try {
+    //cek apakah user ada di database
+    const checkUser = await Prisma.user.findFirst();
+
+    if (checkUser) {
+      res.status(403).json({
+        message: "User already exists"
+      })
+
+      next();
+    }
+    else{
+      //validasi
+      const data = Validate(createFirstUserValidation, req.body);
+
+      //buang comfirm passeord
+      delete data.confirm_password;
+
+      //enkripsi password
+      data.password = await bcrypt.hash(data.password, 10);
+
+      //create user
+      const user = await Prisma.user.create({
+        data,
+        select: {
+          name: true,
+          email: true,
+        },
+      });
+
+      
+
+      //create user
+      res.status(200).json(user);
+
+    }
+
+
+    
+  } catch (error) {
+    next(error);
+    
   }
 };
 
 export default {
   login,
   logout,
+  createFirstUser,
   getUser,
   editPass,
 };

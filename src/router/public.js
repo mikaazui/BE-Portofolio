@@ -8,6 +8,8 @@ import skillController from '../controller/skillController.js';
 import experienceController from '../controller/experienceController.js';
 
 export const routerPublic = express.Router();
+//auth
+routerPublic.post('/first-user', authController.createFirstUser)
 //login
 routerPublic.post('/login', authController.login)
 
