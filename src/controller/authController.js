@@ -155,19 +155,27 @@ const createFirstUser = async (req, res, next) => {
           email: true,
         },
       });
-
-      
-
       //create user
       res.status(200).json(user);
-
     }
-
-
-    
   } catch (error) {
     next(error);
     
+  }
+};
+const isUserExist = async (req, res, next) => {
+  try {
+    const user = await Prisma.user.findFirst();
+    if (user) {
+      res.status(200).json({
+        isExist: user ? true : false
+      });
+      
+    } else {
+      res.status(200).json(false);
+    }
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -175,6 +183,7 @@ export default {
   login,
   logout,
   createFirstUser,
+  isUserExist,
   getUser,
   editPass,
 };

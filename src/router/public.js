@@ -10,6 +10,7 @@ import experienceController from '../controller/experienceController.js';
 export const routerPublic = express.Router();
 //auth
 routerPublic.post('/first-user', authController.createFirstUser)
+routerPublic.get('/is-user-exist', authController.isUserExist)
 //login
 routerPublic.post('/login', authController.login)
 
